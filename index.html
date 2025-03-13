@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+Title: ArcGIS Portal Thumbnail Generator
+Purpose: To allow people to generate a thumbnail for use in ArcGIS Portal. By selecting a few options and uploading
+            the thumbnail they want to use, this page generates the thumbnail for them.
+Author: Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
+Date: April 18, 2023
+How to maintain: Two selects should be updated with new application types and source icons. When updating icons,
+                    place them in the logos directory and set the value of the option to the logo file name.
+                 Image tag with id 'thumb' sets default thumbnail background. Is hidden from visibility. Change
+                    path to default logo if desired.
+Required javascript libraries:
+    *PortalThumbnailGenerator.js - Custom code for this project
+    *Bootstrap
+    *jQuery
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CBI Portal Thumbnail Generator</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+	<link rel="manifest" href="favicons/site.webmanifest">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link href="css/PortalThumbnailGenerator.css" rel="stylesheet" type="text/css"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+</head>
+<body>
+    <div class="container">
+    <div class="jumbotron">
+        <h1>CBI Portal Thumbnail Generator</h1>
+        <p>Never use a default thumbnail again!</p>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6">
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <!-- Application type select. Add new entries for new types of applications.
+								I think this is a complete list of items possible
+								https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
+								but don't want to add them all to junk up the list.-->
+                            <label for="applicationType">Item Type</label>
+                            <select class="form-control" id="applicationType">
+                                <option value='other'>Other (Enter Type)</option>
+								<option>CSV</option>
+                                <option>Dashboard</option>
+                                <option>Document</option>
+                                <option>Feature Layer</option>
+                                <option>File</option>
+                                <option>Gallery</option>
+                                <option>Imagery Layer</option>
+								<option>Locator</option>
+								<option selected="selected">Map Image Layer</option>
+								<option>Mobile Map Package</option>
+								<option>Scene Layer</option>
+								<option>Service Definition</option>
+								<option>Tile Layer</option>
+								<option>Vector Tile Layer</option>
+                                <option>Web Tool</option>
+                                <option>Web App</option>
+                                <option>Web Map</option>
+								<option>Web Scene</option>
+								<option>WFS Layer</option>
+								<option>WMS Layer</option>
+                            </select>
+                            <span id="customApplicationType" style="display:none">
+                                <label for="customapplicationtype">Other Item Type</label>
+                                <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="external"> External Source (References service on an external server)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sourceIcon">Source Logo</label>
+                            <!-- Each option should have a value. Each value should be the file name
+                                 in the logos directory (no spaces in file name please)-->
+                            <select class="form-control" id="sourceIcon">
+                                <option value="Other.png">Other (Upload Logo)</option>
+								<option value="None.png">None</option>
+								<option value="ai2es-logo.png">AI2ES</option>
+								<option value="cats-logo.png">CATS</option>
+                                <option value="CBI.png" selected="selected">CBI</option>
+								<option value="cdl-logo.png">CDL Lab</option>
+								<option value="goal-logo.png">GOAL Lab</option>
+								<option value="mantis-logo.jpg">MANTIS Lab</option>
+								<option value="TNRIS.png">TNRIS</option>
+								<option value="tsrc-logo.png">TSRC</option>
+                            </select>
+                            <span id="customLogoBlock" style="display:none">
+                                <label for="customlogo">Other Source Icon</label>
+                                <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                            </span>
+                            <output id="logoDetails"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
+                        </div>
+                        <div class="form-group">
+                            <label for="file">Screenshot to Insert</label>
+                            <input class='form-control' type="file" id="file" name="file" />
+                            <small>For best results, your screenshot should have an aspect ratio 1.5:1.<br />
+                                Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
+                                <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
+                                target="_blank">Windows Snipping Tool</a> or 
+                                <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.</small>
+                            <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
+                            <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
+                        </div>
+                    </form>
+					
+					
+					<h3>Instructions</h3>
+					<ol>
+						<li>Select the portal item type.</li>
+						<li>Check box if external source.</li>
+						<li>Select the source logo.</li>
+						<li>Choose screenshot to insert <i>or if the screenshot is in your clipboard,
+								click CTRL-V to paste directly onto this page.</i></li>
+						<li>Download the thumbnail to your computer.</li>
+					</ol>
+
+                </div>
+				<div class="col-md-5 col-md-offset-1">
+                    <canvas id="thumbnail" class="thumbnailCanvas" height="400px" width="600px">
+                        <em>If you see this text, your browser does not support the HTML5 canvas tag
+                        and this application will not work.</em>
+                    </canvas>
+                    <button type="button" class="btn btn-md btn-default" id="downloadThumbnail">
+                        Download Thumbnail
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-md-12">
+            <hr>
+            <p>Developed by Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu</p>
+            
+        </div>
+    </div>
+<!-- End Container -->
+</div>
+
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<!--Custom javascript for the thumbnail generator.-->
+<script type="text/javascript" src="js/PortalThumbnailGenerator.js"></script>
+</body>
+</html>

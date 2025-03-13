@@ -113,6 +113,25 @@ Required javascript libraries:
                             <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
                             <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
                         </div>
+                        <!-- Options for the screenshot's position inside the viewable area -->
+                        <p></p>
+                        <div class="radio">
+                            <fieldset>
+                                <legend>Screenshot position</legend>
+                                <div>
+                                    <label>
+                                        <input type="radio" name="imagePosition" id="imageStretch">
+                                        Stretch Image
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input type="radio" name="imagePosition" id="imageFill">
+                                        Fill and crop image
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
                     </form>
 					
 					

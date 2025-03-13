@@ -32,7 +32,19 @@ function generateThumbnail(){
     var thumbImg = new Image();
     thumbImg.src = $("#thumb").attr('src');
 	// ctx.drawImage(thumbImg, 0, 0, canvasWidth, canvasHeight);
-	ctx.drawImage(thumbImg, sidebarWidth, 0, canvasWidth-sidebarWidth, canvasHeight-bottombarHeight);
+    
+    // Change position of image depending on what option is selected in the form. Defaults to stretching the image.
+    // Fetch image position, set as imageStretch by default
+    const imagePosition = $("input[name=imagePosition]:checked").val() ?? "imageStretch";
+    console.log(imagePosition);
+
+    switch( imagePosition ) {
+        case "imageStretch":
+        default:
+            // Draw the image
+            ctx.drawImage(thumbImg, sidebarWidth, 0, canvasWidth-sidebarWidth, canvasHeight-bottombarHeight);
+    }
+	
 
     // Draw left white box
     ctx.fillStyle = 'white';
@@ -217,6 +229,11 @@ $('document').ready(function(){
 
     // If file chosen, generate thumbnail
     $('#customlogo').on('change', handleOtherSourceIcon);
+
+    // If the image position option changes, generate thumbnail
+    $('#imagePositionControls').on('change', function(){
+        generateThumbnail();
+    });
 
     // If Download Thumbnail button clicked, force file download
     $('#downloadThumbnail').on('click', function(){

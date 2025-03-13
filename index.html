@@ -116,18 +116,24 @@ Required javascript libraries:
                         <!-- Options for the screenshot's position inside the viewable area -->
                         <p></p>
                         <div class="radio">
-                            <fieldset>
+                            <fieldset id="imagePositionControls">
                                 <legend>Screenshot position</legend>
                                 <div>
                                     <label>
-                                        <input type="radio" name="imagePosition" id="imageStretch">
-                                        Stretch Image
+                                        <input type="radio" name="imagePosition" id="imageStretch" value="imageStretch">
+                                        Stretch image
                                     </label>
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="imagePosition" id="imageFill">
+                                        <input type="radio" name="imagePosition" id="imageFill" value="imageFill">
                                         Fill and crop image
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input type="radio" name="imagePosition" id="imageFit" value="imageFit">
+                                        Fit image
                                     </label>
                                 </div>
                             </fieldset>

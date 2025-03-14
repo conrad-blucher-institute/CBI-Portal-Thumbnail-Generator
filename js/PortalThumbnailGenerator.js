@@ -36,8 +36,6 @@ function generateThumbnail(){
     // Change position of image depending on what option is selected in the form. Defaults to stretching the image.
     // Fetch image position, set as imageStretch by default
     const imagePosition = $("input[name=imagePosition]:checked").val() ?? "imageStretch";
-    console.log(imagePosition);
-    console.log("The canvas is " + canvasWidth / canvasHeight + " but the image is " + thumbImg.naturalWidth / thumbImg.naturalHeight );
 
     // The dimensions of the image area (target / destination) that the image is being placed in
     const targetHeight = canvasHeight - bottombarHeight;
@@ -45,27 +43,27 @@ function generateThumbnail(){
     // The dimensions of the source image that is being inserted
     const sourceImageWidth = thumbImg.naturalWidth;
     const sourceImageHeight = thumbImg.naturalHeight;
+    // Helpful reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+    let sourceImageX, sourceImageY, drawnImageHeight, drawnImageWidth, drawnImageX, drawnImageY;
 
     switch( imagePosition ) {
         case "imageFill":
-            // Helpful reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage#syntax
-
             // If the image is too wide for the aspect ratio:
             if ( ( targetWidth / targetHeight ) < ( sourceImageWidth / sourceImageHeight ) ) {
                 // Cropping (offsetting) the image by scaling the destination (target) image area to the image's size,
                 // then getting the # of pixels wide that would not be visible inside the target area (the horizontal overflow in pixels),
                 // then dividing by two to get the # of pixels to crop off from the left.
-                const sourceImageX = ( sourceImageWidth - ( targetWidth * ( sourceImageHeight / targetHeight ) ) ) / 2;
-                const sourceImageY = 0;
+                sourceImageX = ( sourceImageWidth - ( targetWidth * ( sourceImageHeight / targetHeight ) ) ) / 2;
+                sourceImageY = 0;
 
                 // The dimensions of the image, once it's being placed into the destination (target) image area.
                 // - The image drawn will be the same height as the target image area
-                const drawnImageHeight = targetHeight;
+                drawnImageHeight = targetHeight;
                 // - Scale the width to match the difference between the source image's height and the target image area's height
-                const drawnImageWidth = sourceImageWidth * ( targetHeight / sourceImageHeight );
+                drawnImageWidth = sourceImageWidth * ( targetHeight / sourceImageHeight );
                 // - Draw the image from the top-left corner of the image area -- from the top right of the sidebar.
-                const drawnImageX = sidebarWidth;
-                const drawnImageY = 0;
+                drawnImageX = sidebarWidth;
+                drawnImageY = 0;
 
                 // Draw the image onto the canvas
                 ctx.drawImage(thumbImg, sourceImageX, sourceImageY, sourceImageWidth, sourceImageHeight, drawnImageX, drawnImageY, drawnImageWidth, drawnImageHeight);
@@ -75,21 +73,30 @@ function generateThumbnail(){
                 // Cropping (offsetting) the image by scaling the destination (target) image area to the image's size,
                 // then getting the # of pixels high that would not be visible from the target area (the vertical overflow in pixels),
                 // then dividing by two to get the # of pixels to crop off from the top.
-                const sourceImageX = 0;
-                const sourceImageY = ( sourceImageHeight - ( targetHeight * ( sourceImageWidth / targetWidth ) ) ) / 2;
+                sourceImageX = 0;
+                sourceImageY = ( sourceImageHeight - ( targetHeight * ( sourceImageWidth / targetWidth ) ) ) / 2;
 
                 // The dimensions of the image, once it's being placed into the destination (target) image area.
                 // - Scale the height to match the difference between the source image's width and the target image area's width                
-                const drawnImageHeight = sourceImageHeight * ( targetWidth / sourceImageWidth );
+                drawnImageHeight = sourceImageHeight * ( targetWidth / sourceImageWidth );
                 // - The image drawn will be the same width as the target image area
-                const drawnImageWidth = targetWidth;
+                drawnImageWidth = targetWidth;
                 // - Draw the image from the top-left corner of the image area -- from the top right of the sidebar.
-                const drawnImageX = sidebarWidth;
-                const drawnImageY = 0;
+                drawnImageX = sidebarWidth;
+                drawnImageY = 0;
 
                 // Draw the image onto the canvas
                 ctx.drawImage(thumbImg, sourceImageX, sourceImageY, sourceImageWidth, sourceImageHeight, drawnImageX, drawnImageY, drawnImageWidth, drawnImageHeight);
             }
+            break;
+        case "imageCenter":
+            // Center the image by offsetting it up and left, by the amount of remainder (overflow) width and height divided by two
+            drawnImageX = ( -1 * ( sourceImageWidth - targetWidth ) / 2 ) + sidebarWidth;
+            drawnImageY = -1 * ( sourceImageHeight - targetHeight ) / 2;
+            
+            // Draw the image onto the canvas
+            ctx.drawImage(thumbImg, drawnImageX, drawnImageY);
+            
             break;
         case "imageStretch":
         default:

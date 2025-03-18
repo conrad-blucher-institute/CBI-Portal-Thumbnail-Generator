@@ -34,10 +34,8 @@ Required javascript libraries:
         <p>Never use a default thumbnail again!</p>
     </div>
     <div class="row">
-        <div class="col-md-9">
             <div class="row">
-                <div class="col-md-6">
-
+                <div class="col-md-5">
                     <form class="form-horizontal">
                         <div class="form-group">
                             <!-- Application type select. Add new entries for new types of applications.
@@ -115,29 +113,6 @@ Required javascript libraries:
                         </div>
                         <!-- Options for the screenshot's position inside the viewable area -->
                         <p></p>
-                        <div class="form-group radio">
-                            <fieldset id="imagePositionControls">
-                                <legend>Screenshot position</legend>
-                                <div>
-                                    <label>
-                                        <input type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
-                                        Stretch image
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        <input type="radio" name="imagePosition" id="imageFill" value="imageFill">
-                                        Fill image
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        <input type="radio" name="imagePosition" id="imageFit" value="imageCenter">
-                                        Center image
-                                    </label>
-                                </div>
-                            </fieldset>
-                        </div>
                     </form>
 					
 					
@@ -157,11 +132,33 @@ Required javascript libraries:
                         <em>If you see this text, your browser does not support the HTML5 canvas tag
                         and this application will not work.</em>
                     </canvas>
+                    <div class="radio">
+                        <fieldset id="imagePositionControls">
+                            <legend>Screenshot position</legend>
+                            <div>
+                                <label>
+                                    <input type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
+                                    Stretch image
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <input type="radio" name="imagePosition" id="imageFill" value="imageFill">
+                                    Fill image
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <input type="radio" name="imagePosition" id="imageFit" value="imageCenter">
+                                    Center image
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
                     <button type="button" class="btn btn-md btn-default" id="downloadThumbnail">
                         Download Thumbnail
                     </button>
                 </div>
-            </div>
         </div>
     </div>
     <div class="row">

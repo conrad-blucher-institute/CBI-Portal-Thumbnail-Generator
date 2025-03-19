@@ -35,15 +35,16 @@ Required javascript libraries:
                 <p>Never use a default thumbnail again!</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-4">
+        <div class="row mx-auto">
+            <div class="col-5">
                 <form class="form-horizontal">
-                    <div class="form-group">
+                    <!-- Item type selection -->
+                    <div class="form-group mb-2">
                         <!-- Application type select. Add new entries for new types of applications.
                             I think this is a complete list of items possible
                             https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
                             but don't want to add them all to junk up the list.-->
-                        <label for="applicationType">Item Type</label>
+                        <label for="applicationType" class="form-label">Item Type</label>
                         <select class="form-select" id="applicationType">
                             <option value='other'>Other (Enter Type)</option>
                             <option>CSV</option>
@@ -72,15 +73,16 @@ Required javascript libraries:
                             <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
                         </span>
                     </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="external"> External Source (References service on an external server)
-                            </label>
-                        </div>
+                    <!-- External source selection -->
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="external">
+                        <label class="form-check-label" for="external">
+                            External Source (References service on an external server)
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label for="sourceIcon">Source Logo</label>
+                    <!-- Source logo selection -->
+                    <div class="form-group mb-2">
+                        <label for="sourceIcon" class="form-label">Source Logo</label>
                         <!-- Each option should have a value. Each value should be the file name
                             in the logos directory (no spaces in file name please)-->
                         <select class="form-select" id="sourceIcon">
@@ -95,20 +97,26 @@ Required javascript libraries:
                             <option value="TNRIS.png">TNRIS</option>
                             <option value="tsrc-logo.png">TSRC</option>
                         </select>
-                        <span id="customLogoBlock" style="display:none">
-                            <label for="customlogo">Other Source Icon</label>
-                            <input class='form-control' type="file" id="customlogo" name="customlogo" />
-                        </span>
-                        <output id="logoDetails"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
                     </div>
-                    <div class="form-group">
-                        <label for="file">Screenshot to Insert</label>
+                    <!-- Custom source icon file upload [hidden by default] -->
+                    <div class="form-group mb-2">
+                        <div id="customLogoBlock" style="display:none">
+                            <label class="form-label" for="customlogo">Other Source Icon</label>
+                            <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                        </div>
+                        <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
+                    </div>
+                    <!-- Screenshot file upload -->
+                    <div class="form-group mb-2">
+                        <label for="file" class="form-label">Screenshot to Insert</label>
                         <input class='form-control' type="file" id="file" name="file" />
-                        <small>For best results, your screenshot should have an aspect ratio 1.5:1.<br />
+                        <div class="form-text">
+                            For best results, your screenshot should have an aspect ratio 1.5:1.<br />
                             Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
                             <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
                             target="_blank">Windows Snipping Tool</a> or 
-                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.</small>
+                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
+                        </div>
                         <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
                         <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
                     </div>
@@ -128,15 +136,15 @@ Required javascript libraries:
                 </ol>
 
             </div>
-            <div class="col-lg-5 mx-xl-auto">
+            <div class="col-7 mx-xl-auto d-flex flex-column align-items-end gap-3">
                 <canvas id="thumbnail" class="thumbnailCanvas" height="400px" width="600px">
                     <em>If you see this text, your browser does not support the HTML5 canvas tag
                     and this application will not work.</em>
                 </canvas>
-                <div>
+                <div class="canvas-width">
                     <fieldset id="imagePositionControls">
                         <legend>Screenshot position</legend>
-                        <div class="d-inline-flex w-100">
+                        <div class="d-inline-flex flex-fill w-100">
                             <div class="form-check flex-fill">
                                 <label class="form-check-label">
                                     <input class="form-check-input" type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
@@ -158,7 +166,7 @@ Required javascript libraries:
                         </div>
                     </fieldset>
                 </div>
-                <button type="button" class="btn btn-primary" id="downloadThumbnail">
+                <button type="button" class="btn btn-primary canvas-width" id="downloadThumbnail">
                     Download Thumbnail
                 </button>
             </div>

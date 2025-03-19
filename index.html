@@ -36,7 +36,7 @@ Required javascript libraries:
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <!-- Application type select. Add new entries for new types of applications.
@@ -44,7 +44,7 @@ Required javascript libraries:
                             https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
                             but don't want to add them all to junk up the list.-->
                         <label for="applicationType">Item Type</label>
-                        <select class="form-control" id="applicationType">
+                        <select class="form-select" id="applicationType">
                             <option value='other'>Other (Enter Type)</option>
                             <option>CSV</option>
                             <option>Dashboard</option>
@@ -83,7 +83,7 @@ Required javascript libraries:
                         <label for="sourceIcon">Source Logo</label>
                         <!-- Each option should have a value. Each value should be the file name
                             in the logos directory (no spaces in file name please)-->
-                        <select class="form-control" id="sourceIcon">
+                        <select class="form-select" id="sourceIcon">
                             <option value="Other.png">Other (Upload Logo)</option>
                             <option value="None.png">None</option>
                             <option value="ai2es-logo.png">AI2ES</option>
@@ -128,31 +128,33 @@ Required javascript libraries:
                 </ol>
 
             </div>
-            <div class="col-md-5 mx-auto">
+            <div class="col-lg-5 mx-xl-auto">
                 <canvas id="thumbnail" class="thumbnailCanvas" height="400px" width="600px">
                     <em>If you see this text, your browser does not support the HTML5 canvas tag
                     and this application will not work.</em>
                 </canvas>
-                <div class="radio">
+                <div>
                     <fieldset id="imagePositionControls">
                         <legend>Screenshot position</legend>
-                        <div>
-                            <label>
-                                <input type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
-                                Stretch image
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                <input type="radio" name="imagePosition" id="imageFill" value="imageFill">
-                                Fill image
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                <input type="radio" name="imagePosition" id="imageFit" value="imageCenter">
-                                Center image
-                            </label>
+                        <div class="d-inline-flex w-100">
+                            <div class="form-check flex-fill">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
+                                    Stretch image
+                                </label>
+                            </div>
+                            <div class="form-check flex-fill">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageFill" value="imageFill">
+                                    Fill image
+                                </label>
+                            </div>
+                            <div class="form-check flex-fill">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageFit" value="imageCenter">
+                                    Center image
+                                </label>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
@@ -162,7 +164,7 @@ Required javascript libraries:
             </div>
         </div>
         <div class="row">
-            <div class="col col-md-12">
+            <div class="col col-lg-12">
                 <hr>
                 <p>Developed by Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu</p>
                 

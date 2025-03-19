@@ -29,14 +29,14 @@ Required javascript libraries:
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="jumbotron">
+        <div class="row py-4">
+            <div class="p-5 text-center bg-primary text-white rounded-3">
                 <h1>CBI Portal Thumbnail Generator</h1>
                 <p>Never use a default thumbnail again!</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <!-- Application type select. Add new entries for new types of applications.
@@ -128,7 +128,7 @@ Required javascript libraries:
                 </ol>
 
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 mx-auto">
                 <canvas id="thumbnail" class="thumbnailCanvas" height="400px" width="600px">
                     <em>If you see this text, your browser does not support the HTML5 canvas tag
                     and this application will not work.</em>
@@ -156,7 +156,7 @@ Required javascript libraries:
                         </div>
                     </fieldset>
                 </div>
-                <button type="button" class="btn btn-md btn-default" id="downloadThumbnail">
+                <button type="button" class="btn btn-primary" id="downloadThumbnail">
                     Download Thumbnail
                 </button>
             </div>

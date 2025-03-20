@@ -57,8 +57,8 @@ Required javascript libraries:
                 </div>
             </div>
         </div>
-        <div class="row mx-auto">
-            <div class="col-5">
+        <div class="row">
+            <div class="col-lg-5 order-2 order-lg-1">
                 <form class="form-horizontal">
                     <!-- Item type selection -->
                     <div class="form-group mb-2">
@@ -146,12 +146,12 @@ Required javascript libraries:
                     <p></p>
                 </form>
             </div>
-            <div class="col-7 mx-xl-auto d-flex flex-column align-items-end gap-3">
+            <div class="col-lg-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">
                 <canvas id="thumbnail" class="thumbnailCanvas" height="400px" width="600px">
                     <em>If you see this text, your browser does not support the HTML5 canvas tag
                     and this application will not work.</em>
                 </canvas>
-                <div class="canvas-width">
+                <div class="w-100">
                     <fieldset id="imagePositionControls">
                         <legend>Screenshot position</legend>
                         <div class="d-inline-flex flex-fill w-100">
@@ -176,7 +176,7 @@ Required javascript libraries:
                         </div>
                     </fieldset>
                 </div>
-                <button type="button" class="btn btn-primary canvas-width" id="downloadThumbnail">
+                <button type="button" class="btn btn-primary w-100" id="downloadThumbnail">
                     Download Thumbnail
                 </button>
             </div>

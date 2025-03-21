@@ -7,6 +7,9 @@
 .canvas-width {
     width: 600px;
 }
+.canvas-height {
+    height: 400px;
+}
 /* Bootstrap icon formatting */
 .bi {
     width: 1em;

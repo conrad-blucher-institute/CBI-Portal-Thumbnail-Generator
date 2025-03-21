@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "esbuild": "0.25.1"
-  },
-  "dependencies": {
-    "@arcgis/core": "^4.32.9"
-  }
-}

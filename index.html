@@ -130,7 +130,29 @@ Required javascript libraries:
                     </div>
                     <!-- Screenshot file upload -->
                     <div class="form-group mb-2">
-                        <label for="file" class="form-label">Screenshot to Insert</label>
+                        <label for="file" class="form-label d-block">Screenshot to Insert</label>
+                        <fieldset class="d-inline-flex flex-fill w-100" id="imageSourceControls">
+                            <div class="me-3">
+                                <legend class="fs-6 text-nowrap">Image source:</legend>
+                            </div>
+                            <div class="d-inline-flex w-100">
+                                <div class="form-check flex-fill">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="imageSourceArcgis">
+                                        ArcGIS Portal
+                                    </label>
+                                </div>
+                                <div class="form-check flex-fill">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="imageSourceArcgis">
+                                        Image
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <button type="button" class="btn btn-primary w-100" id="arcgisPortalLogin">
+                            Connect to ArcGIS Portal
+                        </button>
                         <input class='form-control' type="file" id="file" name="file" />
                         <div class="form-text">
                             For best results, your screenshot should have an aspect ratio 1.5:1.<br />

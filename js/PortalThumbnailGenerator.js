@@ -245,6 +245,24 @@ function toggleCustomApplicationType(evt){
     }
 }
 
+/*  Title: Toggle image upload controls
+    Purposes: Handles the user's toggle of ArcGIS Portal or an image upload for their image source
+*/
+function toggleImageUploadControls() {
+    const imageUploadSource = $("input[name=imageSource]:checked").val() ?? "fileUpload";
+
+    console.log(imageUploadSource);
+
+    if ( imageUploadSource === "arcgisPortal" ) {
+        $("#userImageOptions").addClass("d-none");
+        $("#arcgisPortalImageOptions").removeClass("d-none");
+    }
+    else {
+        $("#arcgisPortalImageOptions").addClass("d-none");
+        $("#userImageOptions").removeClass("d-none");
+    }
+}
+
 /*  Title: document on ready event
     Purpose: Wires up controls when DOM has loaded.
  */
@@ -291,6 +309,15 @@ $('document').ready(function(){
 
     // If the image position option changes, generate thumbnail
     $('#imagePositionControls').on('change', function(){
+        generateThumbnail();
+    });
+
+    // Clear image source option control
+    $("input[name=imageSource]:checked").prop("checked", false);
+
+    // If the image source option changes, change the options displayed and generate thumbnail
+    $('#imageSourceControls').on('change', () => {
+        toggleImageUploadControls();
         generateThumbnail();
     });
 

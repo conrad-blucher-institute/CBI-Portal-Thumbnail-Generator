@@ -66,7 +66,7 @@ Required javascript libraries:
                             I think this is a complete list of items possible
                             https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
                             but don't want to add them all to junk up the list.-->
-                        <label for="applicationType" class="form-label">Item Type</label>
+                        <label for="applicationType" class="form-label fw-bold">Item Type</label>
                         <select class="form-select" id="applicationType">
                             <option value='other'>Other (Enter Type)</option>
                             <option>CSV</option>
@@ -104,7 +104,7 @@ Required javascript libraries:
                     </div>
                     <!-- Source logo selection -->
                     <div class="form-group mb-2">
-                        <label for="sourceIcon" class="form-label">Source Logo</label>
+                        <label for="sourceIcon" class="form-label fw-bold">Source Logo</label>
                         <!-- Each option should have a value. Each value should be the file name
                             in the logos directory (no spaces in file name please)-->
                         <select class="form-select" id="sourceIcon">
@@ -130,7 +130,8 @@ Required javascript libraries:
                     </div>
                     <!-- Screenshot file upload -->
                     <div class="form-group mb-2">
-                        <label for="file" class="form-label d-block">Screenshot to Insert</label>
+                        <label for="file" class="form-label d-block fw-bold">Screenshot to Insert</label>
+                        <!-- Radio button selector for ArcGIS Portal or an uploaded image -->
                         <fieldset class="d-inline-flex flex-fill w-100" id="imageSourceControls">
                             <div class="me-3">
                                 <legend class="fs-6 text-nowrap">Image source:</legend>
@@ -138,31 +139,37 @@ Required javascript libraries:
                             <div class="d-inline-flex w-100">
                                 <div class="form-check flex-fill">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="imageSourceArcgis">
-                                        ArcGIS Portal
+                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="arcgisPortal">
+                                        CBI Maps
                                     </label>
                                 </div>
                                 <div class="form-check flex-fill">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="imageSourceArcgis">
-                                        Image
+                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceFileUpload" value="fileUpload">
+                                        Image upload
                                     </label>
                                 </div>
                             </div>
                         </fieldset>
-                        <button type="button" class="btn btn-primary w-100" id="arcgisPortalLogin">
-                            Connect to ArcGIS Portal
-                        </button>
-                        <input class='form-control' type="file" id="file" name="file" />
-                        <div class="form-text">
-                            For best results, your screenshot should have an aspect ratio 1.5:1.<br />
-                            Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
-                            <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
-                            target="_blank">Windows Snipping Tool</a> or 
-                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
+                        <!-- ArcGIS Portal upload option -->
+                        <div class="d-none" id="arcgisPortalImageOptions">
+                            <button type="button" class="btn btn-primary w-100" id="arcgisPortalLogin">
+                                Connect to CBI Maps
+                            </button>
                         </div>
-                        <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
-                        <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
+                        <!-- File upload option -->
+                        <div class="d-none" id="userImageOptions">
+                            <input class='form-control' type="file" id="file" name="file" />
+                            <div class="form-text">
+                                For best results, your screenshot should have an aspect ratio 1.5:1.<br />
+                                Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
+                                <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
+                                target="_blank">Windows Snipping Tool</a> or 
+                                <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
+                            </div>
+                            <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
+                            <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
+                        </div>
                     </div>
                     <!-- Options for the screenshot's position inside the viewable area -->
                     <p></p>

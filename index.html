@@ -29,22 +29,45 @@ Required javascript libraries:
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="jumbotron">
+        <div class="row py-4">
+            <div class="p-5 text-center bg-primary text-white rounded-3">
                 <h1>CBI Portal Thumbnail Generator</h1>
                 <p>Never use a default thumbnail again!</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-5">
+            <div class="alert alert-primary" role="alert">
+                <div class="alert-header d-flex fs-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                    </svg>
+                    <div class="alert-header-text">
+                        <h2 class="ms-2 alert-heading">Instructions</h2>
+                    </div>
+                </div>
+                <div>   
+                    <ol>
+                        <li>Select the portal item type.</li>
+                        <li>Check box if external source.</li>
+                        <li>Select the source logo.</li>
+                        <li>Choose screenshot to insert <i>or if the screenshot is in your clipboard,
+                                click CTRL-V to paste directly onto this page.</i></li>
+                        <li>Download the thumbnail to your computer.</li>
+                    </ol>
+    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-5 col-lg-4 order-2 order-lg-1">
                 <form class="form-horizontal">
-                    <div class="form-group">
+                    <!-- Item type selection -->
+                    <div class="form-group mb-2">
                         <!-- Application type select. Add new entries for new types of applications.
                             I think this is a complete list of items possible
                             https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
                             but don't want to add them all to junk up the list.-->
-                        <label for="applicationType">Item Type</label>
-                        <select class="form-control" id="applicationType">
+                        <label for="applicationType" class="form-label">Item Type</label>
+                        <select class="form-select" id="applicationType">
                             <option value='other'>Other (Enter Type)</option>
                             <option>CSV</option>
                             <option>Dashboard</option>
@@ -72,18 +95,19 @@ Required javascript libraries:
                             <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
                         </span>
                     </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="external"> External Source (References service on an external server)
-                            </label>
-                        </div>
+                    <!-- External source selection -->
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="external">
+                        <label class="form-check-label" for="external">
+                            External Source (References service on an external server)
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label for="sourceIcon">Source Logo</label>
+                    <!-- Source logo selection -->
+                    <div class="form-group mb-2">
+                        <label for="sourceIcon" class="form-label">Source Logo</label>
                         <!-- Each option should have a value. Each value should be the file name
                             in the logos directory (no spaces in file name please)-->
-                        <select class="form-control" id="sourceIcon">
+                        <select class="form-select" id="sourceIcon">
                             <option value="Other.png">Other (Upload Logo)</option>
                             <option value="None.png">None</option>
                             <option value="ai2es-logo.png">AI2ES</option>
@@ -95,74 +119,72 @@ Required javascript libraries:
                             <option value="TNRIS.png">TNRIS</option>
                             <option value="tsrc-logo.png">TSRC</option>
                         </select>
-                        <span id="customLogoBlock" style="display:none">
-                            <label for="customlogo">Other Source Icon</label>
-                            <input class='form-control' type="file" id="customlogo" name="customlogo" />
-                        </span>
-                        <output id="logoDetails"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
                     </div>
-                    <div class="form-group">
-                        <label for="file">Screenshot to Insert</label>
+                    <!-- Custom source icon file upload [hidden by default] -->
+                    <div class="form-group mb-2">
+                        <div id="customLogoBlock" style="display:none">
+                            <label class="form-label" for="customlogo">Other Source Icon</label>
+                            <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                        </div>
+                        <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
+                    </div>
+                    <!-- Screenshot file upload -->
+                    <div class="form-group mb-2">
+                        <label for="file" class="form-label">Screenshot to Insert</label>
                         <input class='form-control' type="file" id="file" name="file" />
-                        <small>For best results, your screenshot should have an aspect ratio 1.5:1.<br />
+                        <div class="form-text">
+                            For best results, your screenshot should have an aspect ratio 1.5:1.<br />
                             Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
                             <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
                             target="_blank">Windows Snipping Tool</a> or 
-                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.</small>
+                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
+                        </div>
                         <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
                         <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
                     </div>
                     <!-- Options for the screenshot's position inside the viewable area -->
                     <p></p>
                 </form>
-                
-                
-                <h3>Instructions</h3>
-                <ol>
-                    <li>Select the portal item type.</li>
-                    <li>Check box if external source.</li>
-                    <li>Select the source logo.</li>
-                    <li>Choose screenshot to insert <i>or if the screenshot is in your clipboard,
-                            click CTRL-V to paste directly onto this page.</i></li>
-                    <li>Download the thumbnail to your computer.</li>
-                </ol>
-
             </div>
-            <div class="col-md-5">
-                <canvas id="thumbnail" class="thumbnailCanvas" height="400px" width="600px">
-                    <em>If you see this text, your browser does not support the HTML5 canvas tag
-                    and this application will not work.</em>
-                </canvas>
-                <div class="radio">
+            <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">
+                <div class="canvas-height w-100 position-relative bg-secondary-subtle">
+                    <canvas id="thumbnail" class="thumbnailCanvas position-absolute top-50 start-50 translate-middle" height="400px" width="600px">
+                        <em>If you see this text, your browser does not support the HTML5 canvas tag
+                        and this application will not work.</em>
+                    </canvas>
+                </div>
+                <div class="w-100">
                     <fieldset id="imagePositionControls">
                         <legend>Screenshot position</legend>
-                        <div>
-                            <label>
-                                <input type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
-                                Stretch image
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                <input type="radio" name="imagePosition" id="imageFill" value="imageFill">
-                                Fill image
-                            </label>
-                        </div>
-                        <div>
-                            <label>
-                                <input type="radio" name="imagePosition" id="imageFit" value="imageCenter">
-                                Center image
-                            </label>
+                        <div class="d-inline-flex flex-fill w-100">
+                            <div class="form-check flex-fill">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
+                                    Stretch image
+                                </label>
+                            </div>
+                            <div class="form-check flex-fill">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageFill" value="imageFill">
+                                    Fill image
+                                </label>
+                            </div>
+                            <div class="form-check flex-fill">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageFit" value="imageCenter">
+                                    Center image
+                                </label>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
-                <button type="button" class="btn btn-md btn-default" id="downloadThumbnail">
+                <button type="button" class="btn btn-primary w-100" id="downloadThumbnail">
                     Download Thumbnail
                 </button>
             </div>
         </div>
         <div class="row">
-            <div class="col col-md-12">
+            <div class="col col-lg-12">
                 <hr>
                 <p>Developed by Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu</p>
                 
@@ -172,7 +194,7 @@ Required javascript libraries:
     </div>
 
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
 <!--Custom javascript for the thumbnail generator.-->
 <script type="text/javascript" src="js/PortalThumbnailGenerator.js"></script>
 </body>

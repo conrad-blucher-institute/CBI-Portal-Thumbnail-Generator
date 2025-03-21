@@ -3,3 +3,17 @@
     height: 400px;
     width: 600px;
 }
+/* Fixed size for the output image */
+.canvas-width {
+    width: 600px;
+}
+.canvas-height {
+    height: 400px;
+}
+/* Bootstrap icon formatting */
+.bi {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin-top: .125em;
+}

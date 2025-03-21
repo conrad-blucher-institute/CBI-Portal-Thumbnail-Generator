@@ -37,8 +37,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 authMode: "immediate",
             });
             await portal.load();
-            // Print username
-            console.log(`Signed in as ${portal.user.username}`);
+            // Add username to UI
+            $("#notSignedIn").addClass("d-none");
+            $("#signedInMessage")
+                .html(`You are signed in on
+                        <span class="fw-bold">${portal.url}</span> as
+                        <span class="fw-bold">${portal.user.username}</span>`
+                );
+            $("#signedIn").removeClass("d-none");
         }
         catch {
             // Not signed in?
@@ -52,6 +58,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             .checkSignInStatus(oAuthInfo.portalUrl + "/sharing")
             .then(() => {
                 // TODO: If they're already signed in, destroy credentials to sign out.
+                EsriId.destroyCredentials();
+                window.location.reload();
             })
             .catch(() => {
                 // If they're not signed in, generate a new credential
@@ -66,8 +74,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                     })
             })
     }
-
+    // Handle connect to portal button press
     $('#arcgisPortalLogin').click(() => {
         connectToPortal();
+    })
+    // Handle sign out button press
+    $('#arcgisPortalSignOut').click(() => {
+        signInOrOut();
     })
 });

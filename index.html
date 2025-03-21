@@ -156,6 +156,17 @@ Required javascript libraries:
                             <button type="button" class="btn btn-primary w-100" id="arcgisPortalLogin">
                                 Connect to CBI Maps
                             </button>
+                            <div class="form-text" id="notSignedIn">
+                                You are not signed in.
+                            </div>
+                            <div class="form-text d-flex align-items-center d-none" id="signedIn">
+                                <div class="me-auto" id="signedInMessage">
+                                    signedInMessage
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
+                                </div>
+                            </div>
                         </div>
                         <!-- File upload option -->
                         <div class="d-none" id="userImageOptions">

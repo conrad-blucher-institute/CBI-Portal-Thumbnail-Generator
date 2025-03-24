@@ -18,6 +18,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         url: arcgisPortalUrl,
     });
     
+    /**
+     * Connects a user to the ArcGIS Portal by adding the OAuth app information to IdentityManager (which manages ArcGIS credentials) and checking the user's sign-in status.
+     */
     async function connectToPortal() {
         // Add OAuthInfo to the IdentityManager
         EsriId.registerOAuthInfos([oAuthInfo]);
@@ -25,6 +28,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         checkSignIn();
     }
 
+    /**
+     * Checks whether the user is signed in or not, and changes the content displayed on the page if they're signed in. Otherwise, they're prompted to sign in.
+     */
     async function checkSignIn() {
         try {
             // Check sign in status
@@ -55,7 +61,11 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
-    // Sign the user in or out
+    
+    /**
+     * Checks if the user's signed in already; if they are, they are signed out. If they aren't, the user is prompted to enter their
+     * credentials to sign in, and their sign-in status is checked using the checkSignIn() function.
+     */
     async function signInOrOut() {
         try {
             // Check if user's signed in already...
@@ -76,17 +86,32 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             }
             catch {
                 // We failed to get the user's credentials for some reason.
-                console.log("Failed to get user credentials.");
+                console.error("Failed to get user credentials.");
             }
         }
     }
 
+    async function getItemThumbnail(itemId) {
+
+    }
+
+    /* Authentication actions */
     // Handle connect to portal button press
     $('#arcgisPortalLogin').click(() => {
         connectToPortal();
     });
+
     // Handle sign out button press
     $('#arcgisPortalSignOut').click(() => {
         signInOrOut();
+    });
+
+    /* Thumbnail actions */
+    // Handle add from item ID button press
+    $('#arcgisItemIdAdd').click(() => {
+        // Get item ID
+        const itemId = $('#arcgisItemIdInput').val();
+
+        console.log(itemId);
     });
 });

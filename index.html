@@ -61,149 +61,153 @@ Required javascript libraries:
         </div>
         <div class="row">
             <div class="col-xl-5 col-lg-4 order-2 order-lg-1">
-                <form class="form-horizontal">
-                    <!-- Item type selection -->
-                    <div class="form-group mb-2">
-                        <!-- Application type select. Add new entries for new types of applications.
-                            I think this is a complete list of items possible
-                            https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
-                            but don't want to add them all to junk up the list.-->
-                        <label for="applicationType" class="form-label fw-bold">Item Type</label>
-                        <select class="form-select" id="applicationType">
-                            <option value='other'>Other (Enter Type)</option>
-                            <option>CSV</option>
-                            <option>Dashboard</option>
-                            <option>Document</option>
-                            <option>Feature Layer</option>
-                            <option>File</option>
-                            <option>Gallery</option>
-                            <option>Imagery Layer</option>
-                            <option>Locator</option>
-                            <option selected="selected">Map Image Layer</option>
-                            <option>Mobile Map Package</option>
-                            <option>Scene Layer</option>
-                            <option>Service Definition</option>
-                            <option>Tile Layer</option>
-                            <option>Vector Tile Layer</option>
-                            <option>Web Tool</option>
-                            <option>Web App</option>
-                            <option>Web Map</option>
-                            <option>Web Scene</option>
-                            <option>WFS Layer</option>
-                            <option>WMS Layer</option>
-                        </select>
-                        <span id="customApplicationType" style="display:none">
-                            <label for="customapplicationtype">Other Item Type</label>
-                            <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
-                        </span>
-                    </div>
-                    <!-- External source selection -->
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="external">
-                        <label class="form-check-label" for="external">
-                            External Source (References service on an external server)
-                        </label>
-                    </div>
-                    <!-- Source logo selection -->
-                    <div class="form-group mb-2">
-                        <label for="sourceIcon" class="form-label fw-bold">Source Logo</label>
-                        <!-- Each option should have a value. Each value should be the file name
-                            in the logos directory (no spaces in file name please)-->
-                        <select class="form-select" id="sourceIcon">
-                            <option value="Other.png">Other (Upload Logo)</option>
-                            <option value="None.png">None</option>
-                            <option value="ai2es-logo.png">AI2ES</option>
-                            <option value="cats-logo.png">CATS</option>
-                            <option value="CBI.png" selected="selected">CBI</option>
-                            <option value="cdl-logo.png">CDL Lab</option>
-                            <option value="goal-logo.png">GOAL Lab</option>
-                            <option value="mantis-logo.jpg">MANTIS Lab</option>
-                            <option value="TNRIS.png">TNRIS</option>
-                            <option value="tsrc-logo.png">TSRC</option>
-                        </select>
-                    </div>
-                    <!-- Custom source icon file upload [hidden by default] -->
-                    <div class="form-group mb-2">
-                        <div id="customLogoBlock" style="display:none">
-                            <label class="form-label" for="customlogo">Other Source Icon</label>
-                            <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                <div class="alert alert-light form-text mt-3" role="alert" id="userInfo">
+                    <div class="d-flex align-items-center" id="userSignedOut">
+                        <!-- Message displayed when signed in, sign-in button -->
+                        <div class="me-auto" id="userSignedOutMessage">
+                            You are not signed into CBI Maps.
                         </div>
-                        <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
+                        <div>
+                            <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignIn">Sign in</button>
+                        </div>
                     </div>
-                    <!-- Screenshot file upload -->
-                    <div class="form-group mb-2">
-                        <label for="file" class="form-label d-block fw-bold">Screenshot to Insert</label>
-                        <!-- Radio button selector for ArcGIS Portal or an uploaded image -->
-                        <fieldset class="d-inline-flex flex-fill w-100" id="imageSourceControls">
-                            <div class="me-3">
-                                <legend class="fs-6 text-nowrap">Image source:</legend>
+                    <div class="d-flex align-items-center d-none" id="userSignedIn">
+                        <!-- Message displayed when signed in, sign-in button -->
+                        <div class="me-auto" id="signedInMessage"></div>
+                        <div>
+                            <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
+                        </div>
+                    </div>   
+                </div>
+
+                <div class="card">
+                    <!-- Tabs -->
+                    <div class="card-header">
+                        <ul class="nav nav-pills nav-justified card-header-pills" id="thumbnailGenTabs" role="tablist">
+                        <!-- <ul class="nav nav-tabs nav-fill card-header-tabs"  id="thumbnail-gen-tabs" role="tablist"> -->
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="thumbnailGenSelectItemTab" data-bs-toggle="pill" data-bs-target="#thumbnailGenSelectItem" type="button" role="tab" aria-controls="thumbnailGenSelectItem" aria-selected="true">
+                                    1. Select item
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link disabled" id="thumbnailGenItemDataTab" data-bs-toggle="pill" data-bs-target="#thumbnailGenItemData" type="button" role="tab" aria-controls="thumbnailGenItemData" aria-selected="true" aria-disabled="true">
+                                    2. Enter item data
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link disabled" id="thumbnailGenMakeThumbnailTab" data-bs-toggle="pill" data-bs-target="#thumbnailGenMakeThumbnail" type="button" role="tab" aria-controls="thumbnailGenMakeThumbnail" aria-selected="true" aria-disabled="true">
+                                    3. Make thumbnail
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tab content -->
+                    <div class="tab-content">
+                        <!-- 1. Select item -->
+                        <div class="card-body tab-pane fade show active" role="tabpanel" id="thumbnailGenSelectItem" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="card-title fs-5">Select your item</div>
+                            <p class="card-text">Choose your item from the CBI Maps portal, or skip this step and enter the item's data manually.</p>
+                            <div class="card-title fs-6">CBI Maps item search</div>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="thumbnailGenItemSearch" disabled>
+                                <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearch" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                    </svg>
+                                </button>
                             </div>
-                            <div class="d-inline-flex w-100">
-                                <div class="form-check flex-fill">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="arcgisPortal">
-                                        CBI Maps
-                                    </label>
-                                </div>
-                                <div class="form-check flex-fill">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="imageSource" id="imageSourceFileUpload" value="fileUpload">
-                                        Image upload
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <!-- ArcGIS Portal upload option -->
-                        <div class="d-none" id="arcgisPortalImageOptions">
-                            <!-- Sign-in (connect) button -->
-                            <button type="button" class="btn btn-primary w-100" id="arcgisPortalLogin">
-                                Connect to CBI Maps
+                            <div class="text-center my-3 fst-italic">or</div>
+                            <button type="button" class="btn btn-primary w-100" id="thumbnailGenSkipItemSelection">
+                                Skip
                             </button>
-                            <!-- Message displayed when signed out -->
-                            <div class="alert alert-light form-text mt-3" role="alert" id="notSignedIn">
-                                You are not signed in.
+                        </div>
+
+                        <!-- 2. Enter item data -->
+                        <div class="card-body tab-pane fade" role="tabpanel" id="thumbnailGenItemData" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="card-title fs-5">Enter item data</div>
+                            <p class="card-text">Enter the item's data. If you selected an item from the portal, this information was autofilled for you.</p>
+                            <!-- Item type selection -->
+                            <div class="form-group mb-2">
+                                <!-- Application type select. Add new entries for new types of applications.
+                                    I think this is a complete list of items possible
+                                    https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
+                                    but don't want to add them all to junk up the list.-->
+                                <label for="applicationType" class="form-label fw-bold">Item Type</label>
+                                <select class="form-select" id="applicationType">
+                                    <option value='other'>Other (Enter Type)</option>
+                                    <option>CSV</option>
+                                    <option>Dashboard</option>
+                                    <option>Document</option>
+                                    <option>Feature Layer</option>
+                                    <option>File</option>
+                                    <option>Gallery</option>
+                                    <option>Imagery Layer</option>
+                                    <option>Locator</option>
+                                    <option selected="selected">Map Image Layer</option>
+                                    <option>Mobile Map Package</option>
+                                    <option>Scene Layer</option>
+                                    <option>Service Definition</option>
+                                    <option>Tile Layer</option>
+                                    <option>Vector Tile Layer</option>
+                                    <option>Web Tool</option>
+                                    <option>Web App</option>
+                                    <option>Web Map</option>
+                                    <option>Web Scene</option>
+                                    <option>WFS Layer</option>
+                                    <option>WMS Layer</option>
+                                </select>
+                                <span id="customApplicationType" style="display:none">
+                                    <label for="customapplicationtype">Other Item Type</label>
+                                    <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
+                                </span>
                             </div>
-                            <!-- All elements shown when signed in -->
-                            <div class="d-none" id="signedIn">
-                                <div id="arcgisItemId">
-                                    <label for="arcgisItemIdInput" class="form-label" id="arcgisItemIdLabel">ArcGIS Item ID</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="" aria-label="Item ID" aria-describedby="arcgisItemIdLabel" id="arcgisItemIdInput">
-                                        <button class="btn btn-outline-secondary" type="button" id="arcgisItemIdAdd">+</button>
-                                    </div>
-                                    <div class="form-text">
-                                        Item IDs are a sequence of 32 letters and numbers, which are automatically generated when you upload something to CBI Maps.
-                                        <a href="https://community.esri.com/t5/arcgis-online-blog/where-can-i-find-the-item-id-for-an-arcgis-online/ba-p/890284" target="_blank">Learn how to find it here</a>.
-                                    </div>
-                                </div>
-                                <div class="alert alert-light form-text mt-3" role="alert">
-                                    <div class="d-flex align-items-center" id="userInfoSignOut">
-                                        <!-- Message displayed when signed in, sign-in button -->
-                                        <div class="me-auto" id="signedInMessage"></div>
-                                        <div>
-                                            <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
-                                        </div>
-                                    </div>    
-                                </div>
+                            <!-- External source selection -->
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="external">
+                                <label class="form-check-label" for="external">
+                                    External Source (References service on an external server)
+                                </label>
                             </div>
                         </div>
-                        <!-- File upload option -->
-                        <div class="d-none" id="userImageOptions">
-                            <input class='form-control' type="file" id="file" name="file" />
-                            <div class="form-text">
-                                For best results, your screenshot should have an aspect ratio 1.5:1.<br />
-                                Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
-                                <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
-                                target="_blank">Windows Snipping Tool</a> or 
-                                <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
-                            </div>
-                            <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
-                            <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
+
+                        <!-- 3. Make thumbnail -->
+                        <div class="card-body tab-pane fade" role="tabpanel" id="thumbnailGenMakeThumbnail" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="card-title fs-5">Make thumbnail</div>
+                            <p class="card-text">Customize your thumbnail and push it to your item on the portal, or just download it.</p>
+                        <!-- Source logo selection -->
+                        <div class="form-group mb-2">
+                            <label for="sourceIcon" class="form-label fw-bold">Source Logo</label>
+                            <!-- Each option should have a value. Each value should be the file name
+                                in the logos directory (no spaces in file name please)-->
+                            <select class="form-select" id="sourceIcon">
+                                <option value="Other.png">Other (Upload Logo)</option>
+                                <option value="None.png">None</option>
+                                <option value="ai2es-logo.png">AI2ES</option>
+                                <option value="cats-logo.png">CATS</option>
+                                <option value="CBI.png" selected="selected">CBI</option>
+                                <option value="cdl-logo.png">CDL Lab</option>
+                                <option value="goal-logo.png">GOAL Lab</option>
+                                <option value="mantis-logo.jpg">MANTIS Lab</option>
+                                <option value="TNRIS.png">TNRIS</option>
+                                <option value="tsrc-logo.png">TSRC</option>
+                            </select>
                         </div>
+                        <!-- Custom source icon file upload [hidden by default] -->
+                        <div class="form-group mb-2">
+                            <div id="customLogoBlock" style="display:none">
+                                <label class="form-label" for="customlogo">Other Source Icon</label>
+                                <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                            </div>
+                            <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
+                        </div>
+                        <!-- Options for the screenshot's position inside the viewable area -->
+                        <p></p>
+                        </div>
+
                     </div>
-                    <!-- Options for the screenshot's position inside the viewable area -->
-                    <p></p>
-                </form>
+                </div>
             </div>
             <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">
                 <div class="canvas-height w-100 position-relative bg-secondary-subtle">

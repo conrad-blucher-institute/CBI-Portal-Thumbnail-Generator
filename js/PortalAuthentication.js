@@ -1,13 +1,17 @@
 // Portal URL
 const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
+// App ID
+const arcgisAppId = "AWimXkIUXWwB90tA";
+// Credential object - initialize as undefined
+let arcgisUserCredential = undefined;
 
 // Use these resources: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/ and https://github.com/Esri/jsapi-resources/tree/main/oauth and https://github.com/EsriDevEvents/jaspi_oauth2_snippet/blob/master/jaspi_oauth2_snippet.tsx
 // Import core Esri packages
-require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/portal/Portal"], (OAuthInfo, EsriId, Portal) => {
+require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/identity/Credential", "esri/portal/Portal", "esri/portal/PortalItem"], (OAuthInfo, EsriId, Credential, Portal, PortalItem) => {
 
     // Create an OAuthInfo object associated with our web app / OAuth key
     const oAuthInfo = new OAuthInfo({
-        appId: "AWimXkIUXWwB90tA",
+        appId: arcgisAppId,
         portalUrl: arcgisPortalUrl,
         popupCallbackUrl: "http://127.0.0.1:3000/oauth-callback.html", // TODO: remove this after
         popup: true,
@@ -34,7 +38,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     async function checkSignIn() {
         try {
             // Check sign in status
-            await EsriId.checkSignInStatus(oAuthInfo.portalUrl + "/sharing");
+            arcgisUserCredential = await EsriId.checkSignInStatus(oAuthInfo.portalUrl + "/sharing");
             // Load the portal object
             const portal = new Portal({
                 url: arcgisPortalUrl,
@@ -42,10 +46,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             });
             await portal.load();
             // Add username to UI
-            // Hide "you're not signed in" message
-            $("#notSignedIn").addClass("d-none");
-            // Hide "connect to portal" button
-            $("#arcgisPortalLogin").addClass("d-none");
+            // Hide signed-out div
+            $("#userSignedOut").addClass("d-none");
             // Construct sign-in message
             $("#signedInMessage")
                 .html(`You are signed in on
@@ -53,7 +55,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                         <span class="fw-bold">${portal.user.username}</span>`
                 );
             // Display sign-in message
-            $("#signedIn").removeClass("d-none");
+            $("#userSignedIn").removeClass("d-none");
         }
         catch {
             // Not signed in? Use the sign-in function.
@@ -78,7 +80,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             // ...otherwise, generate a new credential.
             try {
                 // Prompt the user for credentials
-                await EsriId.getCredential(oAuthInfo.portalUrl + "/sharing", {
+                arcgisUserCredential = await EsriId.getCredential(oAuthInfo.portalUrl + "/sharing", {
                     oAuthPopupConfirmation: true,
                 });
                 // Once that's done, check their sign-in status.
@@ -92,12 +94,35 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     }
 
     async function getItemThumbnail(itemId) {
+        // Construct portal item object
+        const item = new PortalItem({
+            id: itemId,
+            portal: {
+                url: arcgisPortalUrl,
+            },
+        });
 
+        // Try to get item
+        try {
+            // Load from portal
+            await item.load();
+            // Get thumbnail URL
+            const itemThumbnailUrl = item.thumbnailUrl;
+            console.log(itemThumbnailUrl);
+            // // Remove negative feedback in form UI
+            // $('#arcgisItemIdInput').removeClass("is-invalid");
+            // TODO: add the custom thumbnail to the image!
+
+        }
+        // If failed, pass exception back.
+        catch {
+            throw "Failed to get portal item.";
+        }
     }
 
     /* Authentication actions */
     // Handle connect to portal button press
-    $('#arcgisPortalLogin').click(() => {
+    $('#arcgisPortalSignIn').click(() => {
         connectToPortal();
     });
 
@@ -108,10 +133,18 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
     /* Thumbnail actions */
     // Handle add from item ID button press
-    $('#arcgisItemIdAdd').click(() => {
+    $('#arcgisItemIdAdd').click(async () => {
         // Get item ID
         const itemId = $('#arcgisItemIdInput').val();
-
-        console.log(itemId);
+        // Get item thumbnail
+        try {
+            await getItemThumbnail(itemId);
+        }
+        catch (e) {
+            // Log error in console
+            console.error(e);
+            // Display errors on form
+            $('#arcgisItemIdInput').addClass("is-invalid");
+        }
     });
 });

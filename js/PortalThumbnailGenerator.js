@@ -251,8 +251,6 @@ function toggleCustomApplicationType(evt){
 function toggleImageUploadControls() {
     const imageUploadSource = $("input[name=imageSource]:checked").val() ?? "fileUpload";
 
-    console.log(imageUploadSource);
-
     if ( imageUploadSource === "arcgisPortal" ) {
         $("#userImageOptions").addClass("d-none");
         $("#arcgisPortalImageOptions").removeClass("d-none");

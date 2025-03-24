@@ -12,6 +12,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         popupCallbackUrl: "http://127.0.0.1:3000/oauth-callback.html", // TODO: remove this after
         popup: true,
     });
+    
     // Create a new Portal object
     portal = new Portal({
         url: arcgisPortalUrl,

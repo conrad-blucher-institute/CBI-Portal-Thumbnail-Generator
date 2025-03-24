@@ -4,15 +4,17 @@
 Title: ArcGIS Portal Thumbnail Generator
 Purpose: To allow people to generate a thumbnail for use in ArcGIS Portal. By selecting a few options and uploading
             the thumbnail they want to use, this page generates the thumbnail for them.
-Author: Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
-Date: April 18, 2023
+Authors:    Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
+            Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
+Date: March 24, 2025
 How to maintain: Two selects should be updated with new application types and source icons. When updating icons,
                     place them in the logos directory and set the value of the option to the logo file name.
                  Image tag with id 'thumb' sets default thumbnail background. Is hidden from visibility. Change
                     path to default logo if desired.
 Required javascript libraries:
-    *PortalThumbnailGenerator.js - Custom code for this project
-    *Bootstrap
+    *PortalThumbnailGenerator.js - Custom library, handles thumbnail generation
+    *PortalAuthentication.js - Custom library, handles ArcGIS Portal authentication and ArcGIS item queries
+    *Bootstrap 5
     *jQuery
 -->
 <head>
@@ -153,18 +155,29 @@ Required javascript libraries:
                         </fieldset>
                         <!-- ArcGIS Portal upload option -->
                         <div class="d-none" id="arcgisPortalImageOptions">
+                            <!-- Sign-in (connect) button -->
                             <button type="button" class="btn btn-primary w-100" id="arcgisPortalLogin">
                                 Connect to CBI Maps
                             </button>
+                            <!-- Message displayed when signed out -->
                             <div class="form-text" id="notSignedIn">
                                 You are not signed in.
                             </div>
-                            <div class="form-text d-flex align-items-center d-none" id="signedIn">
-                                <div class="me-auto" id="signedInMessage">
-                                    signedInMessage
+                            <!-- All elements shown when signed in -->
+                            <div class="d-none" id="signedIn">
+                                <div id="arcgisItemId">
+                                    <label for="arcgisItemIdInput" class="form-label" id="arcgisItemIdLabel">ArcGIS Item ID</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="" aria-label="Item ID" aria-describedby="arcgisItemIdLabel" id="arcgisItemIdInput">
+                                        <button class="btn btn-outline-secondary" type="button" id="arcgisItemIdAdd">+</button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
+                                <div class="form-text d-flex align-items-center" id="userInfoSignOut">
+                                    <!-- Message displayed when signed in, sign-in button -->
+                                    <div class="me-auto" id="signedInMessage"></div>
+                                    <div>
+                                        <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

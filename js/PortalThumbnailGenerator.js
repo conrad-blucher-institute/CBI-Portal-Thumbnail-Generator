@@ -350,6 +350,25 @@ $('document').ready(function(){
             }
         }) 
     }, false);
+
+    /* Step-by-step thumbnail generator events */
+    // React to "skip" button on step 1 by going straight to step 2
+    $('#thumbnailGenSkipItemSelection').on('click', () => {
+        // Remove disabled class after skipping
+        $('#thumbnailGenItemDataTab').removeClass("disabled");
+        // Show the next tab!
+        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
+        itemDataTab.show();
+    });
+
+    // Go from step 2 to step 3
+    $('#thumbnailGenItemDataNextStep').on('click', () => {
+        // Remove disabled class for step 3
+        $('#thumbnailGenMakeThumbnailTab').removeClass("disabled");
+        // Show the next tab!
+        const makeThumbnailTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenMakeThumbnail"]'));
+        makeThumbnailTab.show();
+    });
 });
 
 //This handler retrieves the images from the clipboard as a blob and returns it in a callback.

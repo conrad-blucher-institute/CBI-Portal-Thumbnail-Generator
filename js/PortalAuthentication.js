@@ -7,7 +7,7 @@ let arcgisUserCredential = undefined;
 
 // Use these resources: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/ and https://github.com/Esri/jsapi-resources/tree/main/oauth and https://github.com/EsriDevEvents/jaspi_oauth2_snippet/blob/master/jaspi_oauth2_snippet.tsx
 // Import core Esri packages
-require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/identity/Credential", "esri/portal/Portal", "esri/portal/PortalItem"], (OAuthInfo, EsriId, Credential, Portal, PortalItem) => {
+require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/portal/Portal", "esri/portal/PortalItem"], (OAuthInfo, EsriId, Portal, PortalItem) => {
 
     // Create an OAuthInfo object associated with our web app / OAuth key
     const oAuthInfo = new OAuthInfo({

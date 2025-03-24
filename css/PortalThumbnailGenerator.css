@@ -15,5 +15,9 @@
     width: 1em;
     height: 1em;
     display: inline-block;
-    margin-top: .125em;
+    margin-top: -.25em;
+}
+/* The card itself */
+.thumbnailGenCard {
+    min-height: 500px;
 }

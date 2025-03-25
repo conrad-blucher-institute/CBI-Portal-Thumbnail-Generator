@@ -1,3 +1,10 @@
+/*  Title: Portal Thumbnail Generator Authentication library
+    Purpose: Connect to the ArcGIS Portal by displaying sign-in elements on the page.
+    Author: Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
+    Date: March 25, 2025
+    How to maintain: TODO
+*/
+
 // Portal URL
 const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 // App ID
@@ -7,7 +14,7 @@ let arcgisUserCredential = undefined;
 
 // Use these resources: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/ and https://github.com/Esri/jsapi-resources/tree/main/oauth and https://github.com/EsriDevEvents/jaspi_oauth2_snippet/blob/master/jaspi_oauth2_snippet.tsx
 // Import core Esri packages
-require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/portal/Portal", "esri/portal/PortalItem"], (OAuthInfo, EsriId, Portal, PortalItem) => {
+require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/portal/Portal", "esri/portal/PortalItem", "esri/request"], (OAuthInfo, EsriId, Portal, PortalItem, esriRequest) => {
 
     // Create an OAuthInfo object associated with our web app / OAuth key
     const oAuthInfo = new OAuthInfo({
@@ -96,7 +103,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
-    async function getItemThumbnail(itemId) {
+    async function getItemById(itemId) {
         // Construct portal item object
         const item = new PortalItem({
             id: itemId,
@@ -109,12 +116,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         try {
             // Load from portal
             await item.load();
-            // Get thumbnail URL
-            const itemThumbnailUrl = item.thumbnailUrl;
-            console.log(itemThumbnailUrl);
-            // // Remove negative feedback in form UI
-            // $('#arcgisItemIdInput').removeClass("is-invalid");
-            // TODO: add the custom thumbnail to the image!
+            // Comment item
+            console.log(item);
 
         }
         // If failed, pass exception back.
@@ -135,19 +138,33 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     });
 
     /* Thumbnail actions */
-    // Handle add from item ID button press
-    $('#arcgisItemIdAdd').click(async () => {
-        // Get item ID
-        const itemId = $('#arcgisItemIdInput').val();
-        // Get item thumbnail
+    $('#thumbnailGenItemSearchButton').click(async () => {
+                    
+        const userInput = $('#thumbnailGenItemSearchInput').val();
+        const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
+        // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.
+        if( argcisItemIdRegex.test(userInput) ) {
+            // Get item thumbnail
+            try {
+                await getItemById(userInput);
+                // If we were successful in getting the item with the given ID,
+                // return so we don't keep on querying the server.
+                return;
+            }
+            catch (e) {
+                // Log error in console; fall through to the next 
+                console.error(e);
+            }
+        }
+        const searchUrl = arcgisPortalUrl + `/sharing/rest/search?f=pjson&token=${arcgisUserCredential.token}&q=${userInput}`;
         try {
-            await getItemThumbnail(itemId);
+            arcgisRequestJson = await esriRequest( searchUrl, {
+                responseType: "json"
+            });
+            console.log(arcgisRequestJson);
         }
         catch (e) {
-            // Log error in console
             console.error(e);
-            // Display errors on form
-            $('#arcgisItemIdInput').addClass("is-invalid");
         }
     });
 });

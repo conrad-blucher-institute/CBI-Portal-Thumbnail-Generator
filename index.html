@@ -118,13 +118,24 @@ Required javascript libraries:
                                     </svg>
                                 </button>
                             </div>
-                            <div class="input-group signedInElements d-none">
-                                <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="thumbnailGenItemSearchInput">
-                                <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearchButton">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                    </svg>
-                                </button>
+                            <div class="signedInElements d-none">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="thumbnailGenItemSearchInput">
+                                    <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div id="thumbnailGenItemSearchResults">
+                                    <ul class="list-group">
+                                        <!-- TODO: make an array of these for each list item. And make clicks go to the next step. -->
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="fs-5">Feature item title</div>
+                                            <div class="fs-6">Feature item type</div>
+                                        </a>
+                                    </ul>
+                                </div>
                             </div>
                             <div class="text-center my-3 fst-italic">or</div>
                             <button type="button" class="btn btn-light w-100" id="thumbnailGenSkipItemSelection">
@@ -309,6 +320,8 @@ Required javascript libraries:
                             </div>
                         </div>
                     </div>
+
+                    <!-- TODO: make the card footer display the current active feature -->
                 </div>
             </div>
             <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">

@@ -251,12 +251,12 @@ function toggleCustomApplicationType(evt){
 function toggleImageUploadControls() {
     const imageUploadSource = $("input[name=imageSource]:checked").val() ?? "fileUpload";
 
-    if ( imageUploadSource === "arcgisPortal" ) {
+    if ( imageUploadSource === "arcgisPortalThumbnail" ) {
         $("#userImageOptions").addClass("d-none");
-        $("#arcgisPortalImageOptions").removeClass("d-none");
+        $("#arcgisPortalDefaultThumbnailSelect").removeClass("d-none");
     }
     else {
-        $("#arcgisPortalImageOptions").addClass("d-none");
+        $("#arcgisPortalDefaultThumbnailSelect").addClass("d-none");
         $("#userImageOptions").removeClass("d-none");
     }
 }

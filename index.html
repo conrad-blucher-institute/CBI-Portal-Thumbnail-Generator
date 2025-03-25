@@ -62,7 +62,7 @@ Required javascript libraries:
         <div class="row">
             <div class="col-xl-5 col-lg-4 order-2 order-lg-1">
                 <div class="alert alert-light form-text" role="alert" id="userInfo">
-                    <div class="d-flex align-items-center" id="userSignedOut">
+                    <div class="d-flex align-items-center signedOutElements">
                         <!-- Message displayed when signed in, sign-in button -->
                         <div class="me-auto" id="userSignedOutMessage">
                             You are not signed into CBI Maps.
@@ -71,9 +71,9 @@ Required javascript libraries:
                             <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignIn">Sign in</button>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center d-none" id="userSignedIn">
+                    <div class="d-flex align-items-center d-none signedInElements">
                         <!-- Message displayed when signed in, sign-in button -->
-                        <div class="me-auto" id="signedInMessage"></div>
+                        <div class="me-auto" id="userSignedInMessage"></div>
                         <div>
                             <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
                         </div>
@@ -110,9 +110,17 @@ Required javascript libraries:
                             <div class="card-title fs-5">Select your item</div>
                             <p class="card-text">Choose your item from the CBI Maps portal, or skip this step and enter the item's data manually.</p>
                             <div class="card-title fs-6">CBI Maps item search / item ID</div>
-                            <div class="input-group has-validation">
-                                <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="thumbnailGenItemSearch" disabled>
-                                <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearch" disabled>
+                            <div class="input-group signedOutElements">
+                                <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="thumbnailGenItemSearchInputSignedOut" aria-describedby="thumbnailGenItemSearchButtonSignedOut" disabled>
+                                <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearchButtonSignedOut" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="input-group signedInElements d-none">
+                                <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="thumbnailGenItemSearchInput">
+                                <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearchButton">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                                     </svg>
@@ -214,7 +222,7 @@ Required javascript libraries:
                                     <div class="d-inline-flex flex-fill w-100">
                                         <div class="form-check flex-fill">
                                             <label class="form-check-label">
-                                                <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgis" value="arcgisPortal">
+                                                <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgisThumbnail" value="arcgisPortalThumbnail">
                                                 Default item thumbnail
                                             </label>
                                         </div>
@@ -226,10 +234,16 @@ Required javascript libraries:
                                         </div>
                                     </div>
                                 </fieldset>
-                                <!-- ArcGIS Portal upload option -->
-                                <div class="d-none" id="arcgisPortalImageOptions">
+                                <!-- ArcGIS Portal default thumbnail upload option -->
+                                <div class="d-none" id="arcgisPortalDefaultThumbnailSelect">
                                     <!-- Message displayed when signed out -->
-                                    <button type="button" class="btn btn-primary w-100" id="notSignedIn">
+                                    <button type="button" class="btn btn-secondary w-100 mt-2 signedOutElements" disabled>
+                                        You are not signed in.
+                                    </button>
+                                    <button type="button" class="btn btn-secondary w-100 mt-2 signedInElements noSelection d-none" disabled>
+                                        You have not selected an item.
+                                    </button>
+                                    <button type="button" class="btn btn-secondary w-100 mt-2 signedInElements requiresSelection d-none">
                                         You are not signed in.
                                     </button>
                                 </div>
@@ -270,9 +284,29 @@ Required javascript libraries:
                                     </div>
                                 </div>
                             </fieldset>
-                            <button type="button" class="btn btn-primary w-100 mt-2" id="downloadThumbnail">
-                                Download Thumbnail
-                            </button>
+                            <div class="d-flex flex-fill gap-3">
+                                <div class="w-50">
+                                    <button type="button" class="btn btn-primary w-100 mt-2" id="downloadThumbnail">
+                                        Download thumbnail
+                                    </button>
+                                </div>
+                                <div class="w-50 noSelection">
+                                    <button type="button" class="btn btn-secondary w-100 mt-2" id="downloadThumbnail" disabled>
+                                        Set thumbnail
+                                    </button>
+                                    <div class="form-text">
+                                        You will need to sign into CBI Maps and select an item from there to use this option.
+                                    </div>
+                                </div>
+                                <div class="w-50 requiresSelection">
+                                    <button type="button" class="btn btn-primary w-100 mt-2" id="downloadThumbnail">
+                                        Upload thumbnail
+                                    </button>
+                                    <div class="form-text">
+                                        This will set the item's thumbnail on CBI Maps.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

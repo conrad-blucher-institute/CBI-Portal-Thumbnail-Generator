@@ -21,3 +21,7 @@
 .thumbnailGenCard {
     min-height: 500px;
 }
+/* Elements only displayed when an item is selected from the ArcGIS portal */
+.requiresSelection {
+    display: none;
+}

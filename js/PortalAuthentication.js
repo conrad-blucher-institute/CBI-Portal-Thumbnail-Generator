@@ -45,19 +45,21 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 authMode: "immediate",
             });
             await portal.load();
-            // Add username to UI
-            // Hide signed-out div
-            $("#userSignedOut").addClass("d-none");
+            // Load content on page for signed-in users
             // Construct sign-in message
-            $("#signedInMessage")
+            $("#userSignedInMessage")
                 .html(`You are signed in on
                         <span class="fw-bold">${portal.url}</span> as
                         <span class="fw-bold">${portal.user.username}</span>`
                 );
-            // Display sign-in message
-            $("#userSignedIn").removeClass("d-none");
+            // Hide signed out elements
+            $(".signedOutElements").addClass("d-none");
+            $(".signedInElements").removeClass("d-none");
+            // TODO: make the "default thumbnail" button react to sign-in + whether an item id is entered
+            // TODO: the same thing but for the "set thumbnail" button that's not in the UI yet
         }
-        catch {
+        catch (e) {
+            console.error(e);
             // Not signed in? Use the sign-in function.
             await signInOrOut();
         }
@@ -74,6 +76,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             await EsriId.checkSignInStatus(oAuthInfo.portalUrl + "/sharing");
             // ...if so, destroy their credentials.
             EsriId.destroyCredentials();
+            console.log("reloading");
             window.location.reload();
         }
         catch {

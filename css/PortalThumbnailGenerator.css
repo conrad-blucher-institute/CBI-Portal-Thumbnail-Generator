@@ -25,3 +25,8 @@
 .requiresSelection {
     display: none;
 }
+/* Max height for search results */
+.searchResults {
+    max-height: 12rem;
+    overflow: scroll;
+}

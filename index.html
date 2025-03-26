@@ -119,21 +119,18 @@ Required javascript libraries:
                                 </button>
                             </div>
                             <div class="signedInElements d-none">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="thumbnailGenItemSearchInput">
-                                    <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearchButton">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div id="thumbnailGenItemSearchResults">
-                                    <ul class="list-group">
-                                        <!-- TODO: make an array of these for each list item. And make clicks go to the next step. -->
-                                        <a href="#" class="list-group-item list-group-item-action">
-                                            <div class="fs-5">Feature item title</div>
-                                            <div class="fs-6">Feature item type</div>
-                                        </a>
+                                <form id="thumbnailGenItemSearch">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="thumbnailGenItemSearchInput">
+                                        <button class="btn btn-outline-secondary" type="submit" id="thumbnailGenItemSearchButton">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="mt-2" id="thumbnailGenItemSearchResults">
+                                    <ul class="list-group searchResults" id="thumbnailGenItemSearchResultsList">
                                     </ul>
                                 </div>
                             </div>

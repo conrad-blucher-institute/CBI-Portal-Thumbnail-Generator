@@ -116,13 +116,57 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         try {
             // Load from portal
             await item.load();
-            // Comment item
-            console.log(item);
+            // Return item
+            return item;
 
         }
         // If failed, pass exception back.
         catch {
             throw "Failed to get portal item.";
+        }
+    }
+
+    function displaySearchResults(itemArray) {
+        // Clear current results container
+        $("#thumbnailGenItemSearchResultsList").html("");
+        // Only display a list if it's a list and if it has a length value over 0.
+        if (Array.isArray(itemArray) && itemArray?.length > 0) {
+            // Loop through item array
+            for (const item of itemArray) {
+                console.log(item);
+                // If the item has a thumbnail, display it. Otherwise, make the layout text-only.
+                if ( item.thumbnail ) {
+                    $("#thumbnailGenItemSearchResultsList")
+                    .append(`<a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="w-25 d-flex align-items-center">
+                                        <img
+                                            class="rounded img-fluid"
+                                            src="${arcgisPortalUrl}/sharing/rest/content/items/${item.id}/info/${item.thumbnail}?token=${arcgisUserCredential.token}"
+                                        >
+                                    </div>
+                                    <div class="w-75">
+                                        <div class="fs-5">${item?.title}</div>
+                                        <div class="fs-6">${item?.type}</div>
+                                    </div>
+                                </div>
+                            </a>`);
+                }
+                else {
+                    $("#thumbnailGenItemSearchResultsList")
+                    .append(`<a href="#" class="list-group-item list-group-item-action">
+                                <div class="fs-5">${item?.title}</div>
+                                <div class="fs-6">${item?.type}</div>
+                            </a>`);
+                }
+            }
+        }
+        else {
+            $("#thumbnailGenItemSearchResultsList").html(`
+                    <div class="alert alert-danger" role="alert">
+                        No results found.
+                    </div>
+                `);
         }
     }
 
@@ -138,17 +182,20 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     });
 
     /* Thumbnail actions */
-    $('#thumbnailGenItemSearchButton').click(async () => {
-                    
+    $('#thumbnailGenItemSearch').on("submit", async (event) => {
+        // Suppress default behavior
+        event.preventDefault();
+
         const userInput = $('#thumbnailGenItemSearchInput').val();
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
+        const item = undefined;
         // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.
         if( argcisItemIdRegex.test(userInput) ) {
             // Get item thumbnail
             try {
-                await getItemById(userInput);
-                // If we were successful in getting the item with the given ID,
-                // return so we don't keep on querying the server.
+                item = await getItemById(userInput);
+                console.log(item);
+                displaySearchResults([item]);
                 return;
             }
             catch (e) {
@@ -162,6 +209,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 responseType: "json"
             });
             console.log(arcgisRequestJson);
+            displaySearchResults(arcgisRequestJson?.data?.results);
         }
         catch (e) {
             console.error(e);

@@ -11,6 +11,8 @@ const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 const arcgisAppId = "AWimXkIUXWwB90tA";
 // Credential object - initialize as undefined
 let arcgisUserCredential = undefined;
+// Selected item
+let item = undefined;
 
 // Use these resources: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/ and https://github.com/Esri/jsapi-resources/tree/main/oauth and https://github.com/EsriDevEvents/jaspi_oauth2_snippet/blob/master/jaspi_oauth2_snippet.tsx
 // Import core Esri packages
@@ -105,7 +107,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
     async function getItemById(itemId) {
         // Construct portal item object
-        const item = new PortalItem({
+        const itemById = new PortalItem({
             id: itemId,
             portal: {
                 url: arcgisPortalUrl,
@@ -115,9 +117,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Try to get item
         try {
             // Load from portal
-            await item.load();
+            await itemById.load();
             // Return item
-            return item;
+            return itemById;
 
         }
         // If failed, pass exception back.
@@ -126,28 +128,38 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
-    function displaySearchResults(itemArray) {
+    function selectItem(selectedItem) {
+        item = selectedItem;
+
+        $("#selectedItemInfo").removeClass("d-none");
+        $("#selectedItemInfo")
+            .html(`
+                Selected item: <span class="fw-bold">${item.title}</span> by <span class="fw-bold">${item.owner}</span>
+            `);
+    }
+
+    function displaySearchResults(itemResults) {
         // Clear current results container
         $("#thumbnailGenItemSearchResultsList").html("");
         // Only display a list if it's a list and if it has a length value over 0.
-        if (Array.isArray(itemArray) && itemArray?.length > 0) {
+        if (Array.isArray(itemResults) && itemResults?.length > 0) {
             // Loop through item array
-            for (const item of itemArray) {
-                console.log(item);
+            for (const itemResult of itemResults) {
+                console.log(itemResult);
                 // If the item has a thumbnail, display it. Otherwise, make the layout text-only.
-                if ( item.thumbnail ) {
+                if ( itemResult.thumbnail ) {
                     $("#thumbnailGenItemSearchResultsList")
                     .append(`<a href="#" class="list-group-item list-group-item-action">
                                 <div class="d-flex gap-3 align-items-center">
                                     <div class="w-25 d-flex align-items-center">
                                         <img
                                             class="rounded img-fluid"
-                                            src="${arcgisPortalUrl}/sharing/rest/content/items/${item.id}/info/${item.thumbnail}?token=${arcgisUserCredential.token}"
+                                            src="${arcgisPortalUrl}/sharing/rest/content/items/${itemResult.id}/info/${itemResult.thumbnail}?token=${arcgisUserCredential.token}"
                                         >
                                     </div>
                                     <div class="w-75">
-                                        <div class="fs-5">${item?.title}</div>
-                                        <div class="fs-6">${item?.type}</div>
+                                        <div class="fs-5">${itemResult.title}</div>
+                                        <div class="fs-6">${itemResult.type}</div>
                                     </div>
                                 </div>
                             </a>`);
@@ -155,8 +167,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 else {
                     $("#thumbnailGenItemSearchResultsList")
                     .append(`<a href="#" class="list-group-item list-group-item-action">
-                                <div class="fs-5">${item?.title}</div>
-                                <div class="fs-6">${item?.type}</div>
+                                <div class="fs-5">${itemResult.title}</div>
+                                <div class="fs-6">${itemResult.type}</div>
                             </a>`);
                 }
             }
@@ -188,14 +200,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
         const userInput = $('#thumbnailGenItemSearchInput').val();
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
-        const item = undefined;
+        const itemById = undefined;
         // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.
         if( argcisItemIdRegex.test(userInput) ) {
             // Get item thumbnail
             try {
-                item = await getItemById(userInput);
-                console.log(item);
-                displaySearchResults([item]);
+                itemById = await getItemById(userInput);
+                console.log(itemById);
+                displaySearchResults([itemById]);
                 return;
             }
             catch (e) {

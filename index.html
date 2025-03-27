@@ -80,7 +80,7 @@ Required javascript libraries:
                     </div>   
                 </div>
 
-                <div class="card thumbnailGenCard">
+                <div class="card thumbnailGenCard d-flex">
                     <!-- Tabs -->
                     <div class="card-header">
                         <ul class="nav nav-pills nav-justified card-header-pills" id="thumbnailGenTabs" role="tablist">
@@ -104,7 +104,7 @@ Required javascript libraries:
                     </div>
                     
                     <!-- Tab content -->
-                    <div class="tab-content">
+                    <div class="tab-content mt-auto mb-auto">
                         <!-- 1. Select item -->
                         <div class="card-body tab-pane fade show active" role="tabpanel" id="thumbnailGenSelectItem" aria-labelledby="pills-home-tab" tabindex="0">
                             <div class="card-title fs-5">Select your item</div>
@@ -318,7 +318,8 @@ Required javascript libraries:
                         </div>
                     </div>
 
-                    <!-- TODO: make the card footer display the current active feature -->
+                    <!-- Selected item -->
+                    <div class="mt-auto card-footer text-body-secondary d-none" id="selectedItemInfo"></div>
                 </div>
             </div>
             <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">

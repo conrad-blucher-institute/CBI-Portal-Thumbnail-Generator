@@ -127,6 +127,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
+    // This function handles the selection of an item -- it adds it to the bottom (footer) of the card, and
+    // it navigates the user to the next step
     function selectItem(selectedItem) {
         // Set wider item variable to selectedItem
         item = selectedItem;
@@ -136,6 +138,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             .html(`
                 Selected item: <span class="fw-bold">${item.title}</span> by <span class="fw-bold">${item.owner}</span>
             `);
+        // Navigate from tab 1 to tab 2
+        // Remove disabled class on tab 2 (if it's there)
+        $('#thumbnailGenItemDataTab').removeClass("disabled");
+        // Show the next tab!
+        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
+        itemDataTab.show();
     }
 
     function displaySearchResults(itemResults) {

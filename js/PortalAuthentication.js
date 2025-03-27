@@ -120,7 +120,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             await itemById.load();
             // Return item
             return itemById;
-
         }
         // If failed, pass exception back.
         catch {
@@ -129,8 +128,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     }
 
     function selectItem(selectedItem) {
+        // Set wider item variable to selectedItem
         item = selectedItem;
-
+        // Display selected item info
         $("#selectedItemInfo").removeClass("d-none");
         $("#selectedItemInfo")
             .html(`
@@ -149,7 +149,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 // If the item has a thumbnail, display it. Otherwise, make the layout text-only.
                 if ( itemResult.thumbnail ) {
                     $("#thumbnailGenItemSearchResultsList")
-                    .append(`<a href="#" class="list-group-item list-group-item-action">
+                    .append(`<button type="button" class="searchResult list-group-item list-group-item-action" value="${itemResult.id}">
                                 <div class="d-flex gap-3 align-items-center">
                                     <div class="w-25 d-flex align-items-center">
                                         <img
@@ -162,14 +162,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                                         <div class="fs-6">${itemResult.type}</div>
                                     </div>
                                 </div>
-                            </a>`);
+                            </button>`);
                 }
                 else {
                     $("#thumbnailGenItemSearchResultsList")
-                    .append(`<a href="#" class="list-group-item list-group-item-action">
+                    .append(`<button type="button" href="#" class="list-group-item list-group-item-action">
                                 <div class="fs-5">${itemResult.title}</div>
                                 <div class="fs-6">${itemResult.type}</div>
-                            </a>`);
+                            </button>`);
                 }
             }
         }
@@ -180,6 +180,16 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                     </div>
                 `);
         }
+        // Create an event listener for search results
+        $('.searchResult').on("click", async (event) => {
+            // Prevent other parent/child elements from getting the "click" event
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            // Get the item object from the passed ID
+            const itemById = await getItemById(event.currentTarget.value);
+            // Select the item
+            selectItem(itemById);
+        });
     }
 
     /* Authentication actions */
@@ -193,11 +203,13 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         signInOrOut();
     });
 
-    /* Thumbnail actions */
+    /* Search and item selection actions */
+    // Handle search
     $('#thumbnailGenItemSearch').on("submit", async (event) => {
-        // Suppress default behavior
+        // Suppress default behavior (reloading page)
         event.preventDefault();
 
+        // Get user's input
         const userInput = $('#thumbnailGenItemSearchInput').val();
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
         const itemById = undefined;
@@ -215,7 +227,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 console.error(e);
             }
         }
-        const searchUrl = arcgisPortalUrl + `/sharing/rest/search?f=pjson&token=${arcgisUserCredential.token}&q=${userInput}`;
+        const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson&token=${arcgisUserCredential.token}&q=${userInput}`;
         try {
             arcgisRequestJson = await esriRequest( searchUrl, {
                 responseType: "json"

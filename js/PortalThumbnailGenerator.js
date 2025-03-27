@@ -127,10 +127,11 @@ function generateThumbnail(){
     ctx.font = '40px sans-serif';
     // Rotate canvas so text can be drawn vertical
     ctx.rotate(3 * Math.PI / 2);
-    if ($("#applicationType option:selected").attr('value') == 'other'){
-        var typeTitle = $("#customapplicationtype").val();
-    } else {
-        var typeTitle = $("#applicationType option:selected").text();
+    var typeTitle = $("#applicationTypeInput").val();
+    console.log(typeTitle);
+    // TODO: determine if this placeholder is a good placeholder :)
+    if ( typeTitle == "" ) {
+        typeTitle = "Item type";
     }
     // Check to see if we need to reduce font size. If overruns area (95px), then reduce font size by 1 and repeat.
     var fontSize = 46;
@@ -236,9 +237,9 @@ function toggleCustomSourceUpload(evt){
 /*  Title: Toggle custom application type visibility
     Purpose: Toggles the visibility of custom application type based on if they choose 'Other'
 */
-
+// TODO: determine if function is necessary anymore
 function toggleCustomApplicationType(evt){
-    if ($("#applicationType option:selected").attr('value') == 'other'){
+    if ($("#applicationTypeDatalist option:selected").attr('value') == 'other'){
         document.getElementById('customApplicationType').style.display="block";
     } else {
         document.getElementById('customApplicationType').style.display="none";
@@ -277,9 +278,9 @@ $('document').ready(function(){
     // Do an initial creation of the thumbnail.
     generateThumbnail();
 
-    // If application type changes, generate thumbnail
-    $('#applicationType').on('change', function(){
-        toggleCustomApplicationType();
+    // If application type changes input, generate thumbnail
+    $('#applicationTypeInput').on('input', () => {
+        toggleCustomApplicationType(); // TODO: determine if this is necessary
         generateThumbnail();
     });
 

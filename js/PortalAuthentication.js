@@ -127,8 +127,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
-    // This function handles the selection of an item -- it adds it to the bottom (footer) of the card, and
-    // it navigates the user to the next step
+    // This function handles the selection of an item -- it adds it to the bottom (footer) of the card,
+    // it navigates the user to the next step, and it autofills data on tab 2.
     function selectItem(selectedItem) {
         // Set wider item variable to selectedItem
         item = selectedItem;
@@ -144,6 +144,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Show the next tab!
         const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
         itemDataTab.show();
+        // Autofill data
+        $('#applicationTypeInput').val(item.type);
     }
 
     function displaySearchResults(itemResults) {

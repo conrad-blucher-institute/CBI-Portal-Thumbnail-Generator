@@ -228,7 +228,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     // Thumbnail functions
     // Update the thumbnail element on the page with the given url
     function setThumbnailImage(url) {
-        $('#thumb').attr("src", url.src);
+        $('#thumb').attr("src", url);
     }
 
     // Get the ArcGIS Portal thumbnail url for the current item

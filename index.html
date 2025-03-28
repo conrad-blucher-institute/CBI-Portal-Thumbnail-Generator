@@ -446,7 +446,12 @@ Required javascript libraries:
                     </div>
 
                     <!-- Selected item -->
-                    <div class="mt-auto card-footer text-body-secondary d-none" id="selectedItemInfo"></div>
+                    <div class="mt-auto card-footer text-body-secondary d-flex justify-content-between d-none" id="selectedItemInfo">
+                        <div id="selectedItemInfoMsg"></div>
+                        <div>
+                            <button type="button" class="btn-close" aria-label="Close" id="selectedItemInfoRemove"></button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">

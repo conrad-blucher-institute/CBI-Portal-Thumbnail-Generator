@@ -133,7 +133,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         item = selectedItem;
         // Display selected item info
         $("#selectedItemInfo").removeClass("d-none");
-        $("#selectedItemInfo")
+        $("#selectedItemInfoMsg")
             .html(`
                 Selected item: <span class="fw-bold">${item.title}</span> by <span class="fw-bold">${item.owner}</span>
             `);
@@ -148,6 +148,25 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Hide any items that correspond to no item being selected, show items that correspond to a selected item
         $('.noSelection').addClass('d-none');
         $('.requiresSelection').removeClass('d-none');
+    }
+
+    // This function navigates a user's deselection of an item -- it hides the footer, nullifies the item variable, and sends them back to tab 1.
+    function deselectItem() {
+        // Hide footer
+        $("#selectedItemInfo").addClass("d-none");
+        // Hide items that correspond to item being selected, show items that correspond to no selected item
+        $('.noSelection').removeClass('d-none');
+        $('.requiresSelection').addClass('d-none');
+        // Send user back to tab 1
+        const itemSelectTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenSelectItem"]'));
+        itemSelectTab.show();
+        // Disable other tabs
+        $('#thumbnailGenItemDataTab').addClass("disabled");
+        $('#thumbnailGenMakeThumbnailTab').addClass("disabled");
+        // Destroy item in memory
+        item.destroy();
+        // Make item point to undefined
+        item = undefined;
     }
 
     function displaySearchResults(itemResults) {
@@ -250,5 +269,10 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         catch (e) {
             console.error(e);
         }
+    });
+
+    // Handle item deselection
+    $('#selectedItemInfoRemove').on("click", () => {
+        deselectItem();
     });
 });

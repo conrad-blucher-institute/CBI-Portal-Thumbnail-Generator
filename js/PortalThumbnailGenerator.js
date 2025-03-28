@@ -128,7 +128,6 @@ function generateThumbnail(){
     // Rotate canvas so text can be drawn vertical
     ctx.rotate(3 * Math.PI / 2);
     var typeTitle = $("#applicationTypeInput").val();
-    console.log(typeTitle);
     // TODO: determine if this placeholder is a good placeholder :)
     if ( typeTitle == "" ) {
         typeTitle = "Item type";

@@ -31,6 +31,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         url: arcgisPortalUrl,
     });
     
+    // ArcGIS authentication functions
     /**
      * Connects a user to the ArcGIS Portal by adding the OAuth app information to IdentityManager (which manages ArcGIS credentials) and checking the user's sign-in status.
      */
@@ -104,6 +105,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
+    // ArcGIS Portal item interaction functions
     async function getItemById(itemId) {
         // Construct portal item object
         const itemById = new PortalItem({
@@ -223,6 +225,31 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         });
     }
 
+    // Thumbnail functions
+    // Update the thumbnail element on the page with the given url
+    function setThumbnailImage(url) {
+        $('#thumb').attr("src", url.src);
+    }
+
+    // Get the ArcGIS Portal thumbnail url for the current item
+    async function getPortalItemThumbnailBlob() {
+        // Get portal image from Portal server
+        const url = `${arcgisPortalUrl}/sharing/rest/content/items/${item.id}/info/${item.thumbnail}?token=${arcgisUserCredential.token}`;
+        let response = undefined;
+        // Attempt to get blob response from server
+        try {
+            response = await esriRequest( url, {
+                responseType: "blob"
+            });
+        }
+        catch (e) {
+            console.error(e);
+            return null;
+        }
+        
+        return response.data;
+    }
+
     /* Authentication actions */
     // Handle connect to portal button press
     $('#arcgisPortalSignIn').click(() => {
@@ -275,4 +302,16 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     $('#selectedItemInfoRemove').on("click", () => {
         deselectItem();
     });
+
+    /* Thumbnail actions */
+    $('#getItemThumbnail').on("click", async () => {
+        // Get image blob
+        const blob = await getPortalItemThumbnailBlob();
+        // Create image blob url
+        const URLObj = window.URL || window.webkitURL;
+        const img = new Image();
+        img.src = URLObj.createObjectURL(blob);
+        // Set image
+        setThumbnailImage( img.src );
+    })
 });

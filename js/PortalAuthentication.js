@@ -250,6 +250,22 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         return response.data;
     }
 
+    // Upload the thumbnail to the portal and set it for that particular item
+    async function uploadThumbnail(imageBase64) {
+        try {
+            await item.updateThumbnail({
+                thumbnail: imageBase64
+            });
+            // If successful, return true
+            return true;
+        }
+        catch (e) {
+            // If failed, log error and return the error
+            console.error(e);
+            return e;
+        }
+    }
+
     /* Authentication actions */
     // Handle connect to portal button press
     $('#arcgisPortalSignIn').click(() => {
@@ -304,6 +320,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     });
 
     /* Thumbnail actions */
+    // Get the default thumbnail, add it to our current image
     $('#getItemThumbnail').on("click", async () => {
         // Get image blob
         const blob = await getPortalItemThumbnailBlob();
@@ -313,5 +330,47 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         img.src = URLObj.createObjectURL(blob);
         // Set image
         setThumbnailImage( img.src );
-    })
+    });
+
+    // Set the actual thumbnail item on the Portal
+    $('#uploadThumbnail').on("click", async () => {
+        // Get the modal element
+        const modal = bootstrap.Modal.getOrCreateInstance($("#setThumbnailModal"));
+        // Get the canvas element, convert it to a data url, split it off to get the base64 data by itself
+        const thumbnailBase64 = document.getElementById('thumbnail').toDataURL().split(';base64,')[1];
+        console.log("thumbnailBase64", thumbnailBase64);
+        // Upload the thumbnail to the portal
+        try {
+            const thumbnailResponse = await uploadThumbnail(thumbnailBase64)
+            if ( thumbnailResponse !== true ) {
+                throw thumbnailResponse;
+            }
+            // Add success message and buttons
+            $("#setThumbnailModalBody").html(`
+                Your item's thumbnail has been updated!
+            `);
+            $("#setThumbnailModalFooter").html(`
+                <a class="btn btn-primary" href="${arcgisPortalUrl}/home/item.html?id=${item.id}">View item</a>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>                
+            `);
+            // Show the success modal
+            modal.show();
+        }
+        catch (e) {
+            // Show the error modal
+            $("#setThumbnailModalBody").html(`
+                Something went wrong with updating your item.
+                <div class="card text-bg-light">
+                    <div class="card-body">
+                        <pre><code>${e}</code></pre>
+                    </div>
+                </div>
+            `);
+            $("#setThumbnailModalFooter").html(`
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>                
+            `);
+            // Show the success modal
+            modal.show();
+        }
+    });
 });

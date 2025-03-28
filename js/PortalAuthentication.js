@@ -144,8 +144,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Show the next tab!
         const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
         itemDataTab.show();
-        // Autofill data
-        $('#applicationTypeInput').val(item.type);
+        // Autofill data, trigger input so the thumbnail changes
+        $('#applicationTypeInput').val(item.type).trigger('input');
     }
 
     function displaySearchResults(itemResults) {

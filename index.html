@@ -145,31 +145,38 @@ Required javascript libraries:
                             <p class="card-text">Enter the item's data. If you selected an item from the portal, some of this information was autofilled for you.</p>
                             <!-- Item type selection -->
                             <div class="form-group mb-2">
-                                <!-- Application type select. Add new entries for new types of applications.
-                                    I think this is a complete list of items possible
-                                    https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
-                                    but don't want to add them all to junk up the list.-->
                                 <label for="applicationType" class="form-label fw-bold">Item Type</label>
                                 <input class="form-control" list="applicationTypeDatalist" id="applicationTypeInput" placeholder="Click or type here to choose an item type">
                                 <!-- FIXME: Some of these don't match up with their names in ArcGIS Portal. See what you can do there. -->
                                 <!-- TODO: remove the optional input unless if you want to make it such that it only accepts custom input with a checkbox -->
                                 <datalist id="applicationTypeDatalist">
                                     <option value="360 VR Experience">
+                                    <option value="3DTilesPackage">
                                     <option value="3DTilesService">
                                     <option value="Administrative Report">
                                     <option value="Apache Parquet">
                                     <option value="AppBuilder Extension">
                                     <option value="AppBuilder Widget Package">
+                                    <option value="ArcGIS Pro Add In">
+                                    <option value="ArcGIS Pro Configuration">
+                                    <option value="ArcPad Package">
                                     <option value="CAD Drawing">
                                     <option value="CSV">
                                     <option value="CSV Collection">
                                     <option value="CityEngine Web Scene">
                                     <option value="Code Attachment">
+                                    <option value="Code Sample">
                                     <option value="Color Set">
+                                    <option value="Compact Tile Package">
                                     <option value="Content Category Set">
                                     <option value="Dashboard">
                                     <option value="Data Pipeline">
+                                    <option value="Deep Learning Package">
                                     <option value="Deep Learning Studio Project">
+                                    <option value="Desktop Add In">
+                                    <option value="Desktop Application">
+                                    <option value="Desktop Application Template">
+                                    <option value="Desktop Style">
                                     <option value="Document Link">
                                     <option value="Earth configuration">
                                     <option value="Esri Classification Schema">
@@ -177,6 +184,9 @@ Required javascript libraries:
                                     <option value="Excalibur Imagery Project">
                                     <option value="Experience Builder Widget">
                                     <option value="Experience Builder Widget Package">
+                                    <option value="Explorer Add In">
+                                    <option value="Explorer Layer">
+                                    <option value="Explorer Map">
                                     <option value="Export Package">
                                     <option value="Feature Collection">
                                     <option value="Feature Collection Template">
@@ -191,7 +201,11 @@ Required javascript libraries:
                                     <option value="Geocoding Service">
                                     <option value="Geodata Service">
                                     <option value="Geometry Service">
+                                    <option value="Geoprocessing Package">
+                                    <option value="Geoprocessing Package (Pro version)">
+                                    <option value="Geoprocessing Sample">
                                     <option value="Geoprocessing Service">
+                                    <option value="Globe Document">
                                     <option value="Group Layer">
                                     <option value="Hub Event">
                                     <option value="Hub Initiative">
@@ -200,6 +214,7 @@ Required javascript libraries:
                                     <option value="Hub Project">
                                     <option value="Hub Site Application">
                                     <option value="Image">
+                                    <option value="Image Collection">
                                     <option value="Image Service">
                                     <option value="Insights Data Engineering Model">
                                     <option value="Insights Data Engineering Workbook">
@@ -212,14 +227,24 @@ Required javascript libraries:
                                     <option value="KML">
                                     <option value="KML Collection">
                                     <option value="Knowledge Studio Project">
+                                    <option value="Layer">
+                                    <option value="Layer Package">
+                                    <option value="Layout">
+                                    <option value="Locator Package">
                                     <option value="Map Area">
+                                    <option value="Map Document">
+                                    <option value="Map Package">
                                     <option value="Map Service">
+                                    <option value="Map Template">
                                     <option value="Media Layer">
                                     <option value="Microsoft Excel">
                                     <option value="Microsoft Powerpoint">
                                     <option value="Microsoft Word">
                                     <option value="Mission">
                                     <option value="Mobile Application">
+                                    <option value="Mobile Basemap Package">
+                                    <option value="Mobile Map Package">
+                                    <option value="Mobile Scene Package">
                                     <option value="Native Application">
                                     <option value="Native Application Installer">
                                     <option value="Network Analysis Service">
@@ -232,9 +257,18 @@ Required javascript libraries:
                                     <option value="PDF">
                                     <option value="Pro Map">
                                     <option value="Pro Presentation">
+                                    <option value="Pro Report">
+                                    <option value="Pro Report Template">
+                                    <option value="Project Package">
+                                    <option value="Project Template">
+                                    <option value="Published Map">
+                                    <option value="Raster function template">
                                     <option value="Relational Database Connection">
                                     <option value="Report Template">
+                                    <option value="Rule Package">
                                     <option value="SQLite Geodatabase">
+                                    <option value="Scene Document">
+                                    <option value="Scene Package">
                                     <option value="Scene Service">
                                     <option value="Service Definition">
                                     <option value="Shapefile">
@@ -243,8 +277,12 @@ Required javascript libraries:
                                     <option value="StoryMap">
                                     <option value="StoryMap Theme">
                                     <option value="Style">
+                                    <option value="Survey123 Add In">
                                     <option value="Symbol Set">
+                                    <option value="Task File">
+                                    <option value="Tile Package">
                                     <option value="Urban Project">
+                                    <option value="Vector Tile Package">
                                     <option value="Vector Tile Service">
                                     <option value="Visio Document">
                                     <option value="WCS">
@@ -257,6 +295,7 @@ Required javascript libraries:
                                     <option value="Web Map">
                                     <option value="Web Mapping Application">
                                     <option value="Web Scene">
+                                    <option value="Workflow Manager Package">
                                     <option value="Workflow Manager Service">
                                     <option value="Workforce Project">
                                     <option value="iWork Keynote">

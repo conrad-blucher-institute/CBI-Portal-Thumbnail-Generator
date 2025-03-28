@@ -63,9 +63,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 );
             // Hide signed out elements
             $(".signedOutElements").addClass("d-none");
+            // Display signed in elements
             $(".signedInElements").removeClass("d-none");
-            // TODO: make the "default thumbnail" button react to sign-in + whether an item id is entered
-            // TODO: the same thing but for the "set thumbnail" button that's not in the UI yet
         }
         catch (e) {
             console.error(e);
@@ -146,6 +145,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         itemDataTab.show();
         // Autofill data, trigger input so the thumbnail changes
         $('#applicationTypeInput').val(item.type).trigger('input');
+        // Hide any items that correspond to no item being selected, show items that correspond to a selected item
+        $('.noSelection').addClass('d-none');
+        $('.requiresSelection').removeClass('d-none');
     }
 
     function displaySearchResults(itemResults) {

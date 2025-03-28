@@ -147,7 +147,6 @@ Required javascript libraries:
                             <div class="form-group mb-2">
                                 <label for="applicationType" class="form-label fw-bold">Item Type</label>
                                 <input class="form-control" list="applicationTypeDatalist" id="applicationTypeInput" placeholder="Click or type here to choose an item type">
-                                <!-- FIXME: Some of these don't match up with their names in ArcGIS Portal. See what you can do there. -->
                                 <!-- TODO: remove the optional input unless if you want to make it such that it only accepts custom input with a checkbox -->
                                 <datalist id="applicationTypeDatalist">
                                     <option value="360 VR Experience">
@@ -379,8 +378,8 @@ Required javascript libraries:
                                     <button type="button" class="btn btn-secondary w-100 mt-2 signedInElements noSelection d-none" disabled>
                                         You have not selected an item.
                                     </button>
-                                    <button type="button" class="btn btn-secondary w-100 mt-2 signedInElements requiresSelection d-none">
-                                        You are not signed in.
+                                    <button type="button" class="btn btn-primary w-100 mt-2 requiresSelection d-none">
+                                        Get item thumbnail
                                     </button>
                                 </div>
                                 <!-- File upload option -->
@@ -427,15 +426,15 @@ Required javascript libraries:
                                     </button>
                                 </div>
                                 <div class="w-50 noSelection">
-                                    <button type="button" class="btn btn-secondary w-100 mt-2" id="downloadThumbnail" disabled>
+                                    <button type="button" class="btn btn-secondary w-100 mt-2" disabled>
                                         Set thumbnail
                                     </button>
                                     <div class="form-text">
                                         You will need to sign into CBI Maps and select an item from there to use this option.
                                     </div>
                                 </div>
-                                <div class="w-50 requiresSelection">
-                                    <button type="button" class="btn btn-primary w-100 mt-2" id="downloadThumbnail">
+                                <div class="w-50 requiresSelection d-none">
+                                    <button type="button" class="btn btn-primary w-100 mt-2" id="uploadThumbnail">
                                         Upload thumbnail
                                     </button>
                                     <div class="form-text">

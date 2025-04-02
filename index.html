@@ -454,15 +454,12 @@ Required javascript libraries:
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">
-                <div class="canvas-height w-100 position-relative bg-secondary-subtle">
+            <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex order-1 order-lg-2">
+                <div class="min-canvas-height w-100 position-relative bg-secondary-subtle rounded">
                     <canvas id="thumbnail" class="thumbnailCanvas position-absolute top-50 start-50 translate-middle" height="400px" width="600px">
                         <em>If you see this text, your browser does not support the HTML5 canvas tag
                         and this application will not work.</em>
                     </canvas>
-                </div>
-                <div class="w-100">
-
                 </div>
             </div>
         </div>
@@ -495,7 +492,7 @@ Required javascript libraries:
 <!-- Load Calcite -->
 <script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
 <!-- Load the ArcGIS Maps SDK for JavaScript core API -->
-<link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/dark/main.css"/>
+<link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css"/>
 <script src="https://js.arcgis.com/4.32/"></script>
 <!-- Custom javascript for the thumbnail generator.-->
 <script type="text/javascript" src="js/PortalThumbnailGenerator.js"></script>

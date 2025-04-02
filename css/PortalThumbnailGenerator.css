@@ -10,6 +10,10 @@
 .canvas-height {
     height: 400px;
 }
+/* Utility class for canvas container height */
+.min-canvas-height {
+    min-height: 400px;
+}
 /* Bootstrap icon formatting */
 .bi {
     width: 1em;

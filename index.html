@@ -522,18 +522,26 @@ Required javascript libraries:
                                 </div>
                                 <div class="w-50 noSelection">
                                     <button type="button" class="btn btn-secondary w-100 mt-2" disabled>
-                                        Set thumbnail
+                                        Upload thumbnail
                                     </button>
                                     <div class="form-text">
                                         You will need to sign into CBI Maps and select an item to use this option.
                                     </div>
                                 </div>
-                                <div class="w-50 requiresSelection d-none">
+                                <div class="w-50 requiresSelection requiresPrivileges d-none">
                                     <button type="button" class="btn btn-primary w-100 mt-2" id="uploadThumbnail">
                                         Upload thumbnail
                                     </button>
                                     <div class="form-text">
-                                        This will set the item's thumbnail on CBI Maps.
+                                        This button will set the item's thumbnail on CBI Maps.
+                                    </div>
+                                </div>
+                                <div class="w-50 requiresSelection noPrivileges d-none">
+                                    <button type="button" class="btn btn-secondary w-100 mt-2" disabled>
+                                        Upload thumbnail
+                                    </button>
+                                    <div class="form-text">
+                                        You don't have the privileges required to update this item's thumbnail.
                                     </div>
                                 </div>
                             </div>
@@ -570,6 +578,7 @@ Required javascript libraries:
     <!-- End Container -->
     </div>
 
+    <!-- Modal (message box) that pops up when you set a thumbnail -->
     <div class="modal fade" id="setThumbnailModal" tabindex="-1" aria-labelledby="setThumbnailModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

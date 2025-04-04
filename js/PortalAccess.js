@@ -133,9 +133,18 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
     // This function handles the selection of an item -- it adds it to the bottom (footer) of the card,
     // it navigates the user to the next step, and it autofills data on tab 2.
-    function selectItem(selectedItem) {
+    async function selectItem(selectedItem) {
         // Set wider item variable to selectedItem
         item = selectedItem;
+        // Check if user has ability to edit item
+        const privilegesRequestUrl = `${arcgisPortalUrl}/sharing/rest/community/self?f=pjson&token=${arcgisUserCredential.token}`
+        const privilegesResponse = await esriRequest( privilegesRequestUrl );
+        // Determine if the user can edit this particular item -- Are they an admin? If not, are they the owner?
+        const itemEditableByUser = ( 
+            privilegesResponse?.["data"]?.["role"] === "org_admin"  ? true
+                                                                    : item.owner === privilegesResponse?.["data"]?.["username"] ? true
+                                                                                                                                : false
+        );
         // Display selected item info
         $("#selectedItemInfo").removeClass("d-none");
         $("#selectedItemInfoMsg")
@@ -150,9 +159,21 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         itemDataTab.show();
         // Autofill data, trigger input so the thumbnail changes
         $('#applicationTypeInput').val(item.type).trigger('input');
-        // Hide any items that correspond to no item being selected, show items that correspond to a selected item
+        // Hide any elements that correspond to no item being selected
         $('.noSelection').addClass('d-none');
-        $('.requiresSelection').removeClass('d-none');
+        // Show elements that correspond to an item selection and the user's privileges on that item
+        if ( itemEditableByUser ) {
+            // Show elements that require an item selection, but exclude the ones that only show up when you don't have edit privileges
+            $('.requiresSelection')
+                .not($('.noPrivileges'))
+                    .removeClass('d-none');
+        }
+        else {
+            // Show elements that require an item selection, but exclude the ones that only show up when you DO have edit privileges
+            $('.requiresSelection')
+                .not($('.requiresPrivileges'))
+                    .removeClass('d-none');
+        }
     }
 
     // This function navigates a user's deselection of an item -- it hides the footer, nullifies the item variable, and sends them back to tab 1.
@@ -224,7 +245,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             // Get the item object from the passed ID
             const itemById = await getItemById(event.currentTarget.value);
             // Select the item
-            selectItem(itemById);
+            await selectItem(itemById);
         });
     }
 

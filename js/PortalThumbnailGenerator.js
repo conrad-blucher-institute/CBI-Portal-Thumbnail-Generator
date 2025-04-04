@@ -357,20 +357,34 @@ $('document').ready(function(){
         generateThumbnail();
     });
 
-    // If an image is pasted on to the page, or if the Paste button is pressed, set it as the thumbnail source
+    // If an image is pasted on to the page with Ctrl + V, set it as the thumbnail source
     window.addEventListener("paste", (e) => {
+        // Remove pasted image alert
+        $("#pasteImageAlert").addClass("d-none");
         // Only trigger this if we're on the third step (Make Thumbnail)
         if ( $('#thumbnailGenTabs button[data-bs-target="#thumbnailGenMakeThumbnail"]').hasClass("active") ) {
             // Select the clipboard option on the UI
             $("#imageSourceClipboard").trigger('click');
             // The event here is a ClipboardEvent, which is only triggered on an actual paste (Ctrl + V) -- so we can get the image directly from it.
-            retrieveImageFromClipboardEventAsBlob(e, (imageBlob) => setImageBlobAsThumbnailSrc(imageBlob) );
+            retrieveImageFromClipboardEventAsBlob(e, (imageBlob) => {
+                if (imageBlob) {
+                    setImageBlobAsThumbnailSrc(imageBlob);
+                }
+                else {
+                    console.log("this is not an image!")
+                    $("#pasteImageAlert").removeClass("d-none");
+                }
+            } );
         }
     }, false);
 
     $('#pasteImage').on('click', async (e) => {
         // The event here is a click event, so we'll have to get the image data with the Clipboard API. https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
         // Note: the browser will prompt you for permission to paste here. Also, on non-localhost/127.0.0.1 connections, this will ONLY work over HTTPS.
+        
+        // Remove pasted image alert
+        $("#pasteImageAlert").addClass("d-none");
+        // Get clipboard contents
         const clipboardContents = await navigator.clipboard.read();
         for (const item of clipboardContents) {
             // Run a test for every item in the array, check if it's an image format (i.e. if its MIME type begins with 'image')
@@ -381,8 +395,7 @@ $('document').ready(function(){
                 setImageBlobAsThumbnailSrc( imageBlob );
             }
             else {
-                // Throw error! TODO: better feedback
-                console.error("not an image :(");
+                $("#pasteImageAlert").removeClass("d-none");
             }
         }
     });
@@ -408,29 +421,38 @@ $('document').ready(function(){
 });
 
 // This handler retrieves the images from the given ClipboardEvent as a blob and returns it in a callback.
-function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback){
-	if(pasteEvent.clipboardData == false){
-        if(typeof(callback) == "function"){
+// Calls the callback function w/ an argument of undefined if the item(s) on the clipboard aren't images.
+function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback) {
+    // Check if a callback function is given
+    if ( typeof(callback) == "function" ) {
+        // If the clipboard is blank, call the callback function w/ undefined
+        if(pasteEvent.clipboardData == false){
             callback(undefined);
-        }
-    };
-
-    var items = pasteEvent.clipboardData.items;
-
-    if(items == undefined){
-        if(typeof(callback) == "function"){
+        };
+        // Get items on the clipboard
+        const items = pasteEvent.clipboardData.items;
+        // If the items are undefined, call callback w/ undefined
+        if(items == undefined){
             callback(undefined);
-        }
-    };
+        };
+        
+        // Resolves as true if any item is an image, and false if none of them are.
+        let isAnItemImage = false;
 
-    for (var i = 0; i < items.length; i++) {
-        // Skip content if not image
-        if (items[i].type.indexOf("image") == -1) continue;
-        // Retrieve image on clipboard as blob
-        var blob = items[i].getAsFile();
-
-        if(typeof(callback) == "function"){
-            callback(blob);
+        // Go through items, call callback function and set bool as true if an item is an image
+        for (const item of items) {
+            if (item.type.indexOf("image") != -1) {
+                const blob = item.getAsFile();
+                callback( blob );
+                isAnItemImage = true;
+            }
         }
+    
+        // If no item on the clipboard is an image, call the callback fn w/ undefined.
+        if ( !isAnItemImage ) {
+            callback( undefined );
+        }
+    
     }
+    
 }

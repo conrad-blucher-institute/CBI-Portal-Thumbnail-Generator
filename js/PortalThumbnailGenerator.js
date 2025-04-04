@@ -246,7 +246,7 @@ function toggleCustomApplicationType(evt){
 }
 
 /*  Title: Toggle image upload controls
-    Purposes: Handles the user's toggle of ArcGIS Portal or an image upload for their image source
+    Purposes: Handles the user's toggle of ArcGIS Portal, the clipboard, or an image file upload for their image source
 */
 function toggleImageUploadControls() {
     const imageUploadSource = $("input[name=imageSource]:checked").val() ?? "fileUpload";
@@ -264,6 +264,18 @@ function toggleImageUploadControls() {
         default:
             $("#userImageOptions").removeClass("d-none");
             break;
+    }
+}
+
+/*  Title: Set ImageBlob as thumbnail source
+    Purpose: Sets the image in the thumbnail to the given image blob.
+*/
+function setImageBlobAsThumbnailSrc(imageBlob) {
+    if (imageBlob) {
+        var URLObj = window.URL || window.webkitURL;
+        var img = new Image();
+        img.src = URLObj.createObjectURL(imageBlob);
+        $('#thumb').attr("src", img.src);
     }
 }
 
@@ -345,17 +357,35 @@ $('document').ready(function(){
         generateThumbnail();
     });
 
-    // If an image is pasted on to the page, set it as the thumbnail source
-    window.addEventListener("paste", function(e){
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob){
-            if(imageBlob){
-                var URLObj = window.URL || window.webkitURL;
-                var img = new Image();
-                img.src=URLObj.createObjectURL(imageBlob);
-                document.getElementById('thumb').src=img.src;
-            }
-        }) 
+    // If an image is pasted on to the page, or if the Paste button is pressed, set it as the thumbnail source
+    window.addEventListener("paste", (e) => {
+        // Only trigger this if we're on the third step (Make Thumbnail)
+        if ( $('#thumbnailGenTabs button[data-bs-target="#thumbnailGenMakeThumbnail"]').hasClass("active") ) {
+            // Select the clipboard option on the UI
+            $("#imageSourceClipboard").trigger('click');
+            // The event here is a ClipboardEvent, which is only triggered on an actual paste (Ctrl + V) -- so we can get the image directly from it.
+            retrieveImageFromClipboardEventAsBlob(e, (imageBlob) => setImageBlobAsThumbnailSrc(imageBlob) );
+        }
     }, false);
+
+    $('#pasteImage').on('click', async (e) => {
+        // The event here is a click event, so we'll have to get the image data with the Clipboard API. https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
+        // Note: the browser will prompt you for permission to paste here. Also, on non-localhost/127.0.0.1 connections, this will ONLY work over HTTPS.
+        const clipboardContents = await navigator.clipboard.read();
+        for (const item of clipboardContents) {
+            // Run a test for every item in the array, check if it's an image format (i.e. if its MIME type begins with 'image')
+            const itemType = item.types?.[0] ?? undefined;
+
+            if ( itemType.substring(0, 5) === "image" ) {
+                const imageBlob = await item.getType( itemType );
+                setImageBlobAsThumbnailSrc( imageBlob );
+            }
+            else {
+                // Throw error! TODO: better feedback
+                console.error("not an image :(");
+            }
+        }
+    });
 
     /* Step-by-step thumbnail generator events */
     // React to "skip" button on step 1 by going straight to step 2
@@ -377,8 +407,8 @@ $('document').ready(function(){
     });
 });
 
-//This handler retrieves the images from the clipboard as a blob and returns it in a callback.
-function retrieveImageFromClipboardAsBlob(pasteEvent, callback){
+// This handler retrieves the images from the given ClipboardEvent as a blob and returns it in a callback.
+function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback){
 	if(pasteEvent.clipboardData == false){
         if(typeof(callback) == "function"){
             callback(undefined);

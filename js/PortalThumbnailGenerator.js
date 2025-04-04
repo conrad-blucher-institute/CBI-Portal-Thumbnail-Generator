@@ -250,14 +250,20 @@ function toggleCustomApplicationType(evt){
 */
 function toggleImageUploadControls() {
     const imageUploadSource = $("input[name=imageSource]:checked").val() ?? "fileUpload";
-
-    if ( imageUploadSource === "arcgisPortalThumbnail" ) {
-        $("#userImageOptions").addClass("d-none");
-        $("#arcgisPortalDefaultThumbnailSelect").removeClass("d-none");
-    }
-    else {
-        $("#arcgisPortalDefaultThumbnailSelect").addClass("d-none");
-        $("#userImageOptions").removeClass("d-none");
+    // Hide all currently shown options
+    $("#imageSourceOptionsContainer > div").addClass("d-none");
+    // Show only the options for the selected image source
+    switch ( imageUploadSource ) {
+        case "arcgisPortalThumbnail":
+            $("#defaultThumbnailOptions").removeClass("d-none");
+            break;
+        case "clipboardImage":
+            $("#clipboardImageOptions").removeClass("d-none");
+            break;
+        case "fileUpload":
+        default:
+            $("#userImageOptions").removeClass("d-none");
+            break;
     }
 }
 

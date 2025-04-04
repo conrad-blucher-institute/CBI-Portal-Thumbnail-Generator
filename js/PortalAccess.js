@@ -1,5 +1,5 @@
-/*  Title: Portal Thumbnail Generator Authentication library
-    Purpose: Connect to the ArcGIS Portal by displaying sign-in elements on the page.
+/*  Title: Portal Thumbnail Generator Accesss library
+    Purpose: Connect to the ArcGIS Portal, access and edit items from it.
     Author: Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
     Date: March 25, 2025
     How to maintain: TODO
@@ -9,9 +9,12 @@
 const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 // App ID
 const arcgisAppId = "AWimXkIUXWwB90tA";
+// App URL
+// TODO: update this in production.
+const appUrl = "http://127.0.0.1:3000"
 // Credential object - initialize as undefined
 let arcgisUserCredential = undefined;
-// Selected item
+// Selected item - initialize as undefined
 let item = undefined;
 
 // Use these resources: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/ and https://github.com/Esri/jsapi-resources/tree/main/oauth and https://github.com/EsriDevEvents/jaspi_oauth2_snippet/blob/master/jaspi_oauth2_snippet.tsx
@@ -22,7 +25,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     const oAuthInfo = new OAuthInfo({
         appId: arcgisAppId,
         portalUrl: arcgisPortalUrl,
-        popupCallbackUrl: "http://127.0.0.1:3000/oauth-callback.html", // TODO: remove this after
+        popupCallbackUrl: `${appUrl}/oauth-callback.html`,
         popup: true,
     });
     

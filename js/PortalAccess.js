@@ -43,11 +43,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         popup: true,
     });
     
-    // Create a new Portal object
-    portal = new Portal({
-        url: arcgisPortalUrl,
-    });
-    
     /* Functions */
     // ArcGIS authentication functions
     /**

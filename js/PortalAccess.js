@@ -287,7 +287,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
      */
     async function getPortalItemThumbnailBlob() {
         // Get portal image from Portal server
-        const url = `${arcgisPortalUrl}/sharing/rest/content/items/${item.id}/info/${item.thumbnail}?token=${arcgisUserCredential.token}`;
+        const url = `${arcgisPortalUrl}/sharing/rest/content/items/${item.id}/info/${item.thumbnail}?w=2400&token=${arcgisUserCredential.token}`;
         let response = undefined;
         // Attempt to get blob response from server
         try {

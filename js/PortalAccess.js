@@ -1,10 +1,22 @@
 /*  Title: Portal Thumbnail Generator Accesss library
-    Purpose: Connect to the ArcGIS Portal, access and edit items from it.
+    Purpose: Connect to the ArcGIS Portal and access/edit items on the Portal.
     Author: Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
-    Date: March 25, 2025
-    How to maintain: TODO
+    Date: April 5, 2025
+    How to maintain:
+        -   This sample's authentication flow is largely based off this ArcGIS Maps SDK sample code: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/.
+            Read it to understand how it is used to prompt the user for sign-in, and how it calls back and gets a token at the end.
+        -   A few constant variables have been pulled to the top to make it easier to change the portal URL, app ID, and the hosted app URL.
+            -   The app URL should match the redirect URLs in the OAuth 2 application item's settings in the Portal.
+        -   This code imports some modules from the ArcGIS Maps SDK for JS with AMD syntax (require(["esri/moduleName"], (moduleName) => { code }).
+            -   To add more modules, add them to the require() array and the list of arguments for the arrow function in the right order.
+        -   The UI is controlled by choosing to show or hide elements with classes (e.g., signedOutElements are elements in the page that are displayed when a user is not signed in).
+            Make sure that no sensitive information is stored here, since these are trivially easy to bypass. However, actual requests to the server (e.g., modifying thumbnails) isn't possible without a token,
+            which you can only get by actually going through the sign-in process.
+        -   This file is split into sections for constants, objects, functions, and actions/event listeners; and subsections for authentication, portal item, and thumbnail-related code.
+            Try to keep it organized that way for readability.
 */
 
+/* Constants */
 // Portal URL
 const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 // App ID
@@ -17,10 +29,12 @@ let arcgisUserCredential = undefined;
 // Selected item - initialize as undefined
 let item = undefined;
 
-// Use these resources: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/ and https://github.com/Esri/jsapi-resources/tree/main/oauth and https://github.com/EsriDevEvents/jaspi_oauth2_snippet/blob/master/jaspi_oauth2_snippet.tsx
 // Import core Esri packages
 require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/portal/Portal", "esri/portal/PortalItem", "esri/request"], (OAuthInfo, EsriId, Portal, PortalItem, esriRequest) => {
 
+    /* Objects */
+    // Authentication objects
+    
     // Create an OAuthInfo object associated with our web app / OAuth key
     const oAuthInfo = new OAuthInfo({
         appId: arcgisAppId,
@@ -34,6 +48,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         url: arcgisPortalUrl,
     });
     
+    /* Functions */
     // ArcGIS authentication functions
     /**
      * Connects a user to the ArcGIS Portal by adding the OAuth app information to IdentityManager (which manages ArcGIS credentials) and checking the user's sign-in status.
@@ -79,7 +94,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
     
     /**
-     * Checks if the user's signed in already; if they are, they are signed out. If they aren't, the user is prompted to enter their
+     * Checks if the user's signed in already; if they are, sign them out. If they aren't, the user is prompted to enter their
      * credentials to sign in, and their sign-in status is checked using the checkSignIn() function.
      */
     async function signInOrOut() {
@@ -88,7 +103,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             await EsriId.checkSignInStatus(oAuthInfo.portalUrl + "/sharing");
             // ...if so, destroy their credentials.
             EsriId.destroyCredentials();
-            console.log("reloading");
             window.location.reload();
         }
         catch {
@@ -109,6 +123,11 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     }
 
     // ArcGIS Portal item interaction functions
+    /**
+     * An asynchronous function used to retrieve an item object from the Portal with a given item ID.
+     * @param {string} itemId The item's ID
+     * @returns {Promise<object>} The item's object
+     */
     async function getItemById(itemId) {
         // Construct portal item object
         const itemById = new PortalItem({
@@ -131,8 +150,16 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
-    // This function handles the selection of an item -- it adds it to the bottom (footer) of the card,
-    // it navigates the user to the next step, and it autofills data on tab 2.
+    /**
+     * Handle a user's selection of an item by:
+     *  -   Checking if the user has the permissions to update the item's thumbnail
+     *  -   Adding the selected item to the card footer (and give them the option to deselect it)
+     *  -   Advance the user to the next card tab (item data)
+     *  -   Autofilling the item's type in the item data tab
+     *  -   Hiding elements that correspond to no item selection, and showing elements that correspond to an item selection,
+     *      while accounting for the user's permissions on that item
+     * @param {object} selectedItem The ArcGIS Portal item object corresponding to the user's selection
+     */
     async function selectItem(selectedItem) {
         // Set wider item variable to selectedItem
         item = selectedItem;
@@ -176,7 +203,13 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     }
 
-    // This function navigates a user's deselection of an item -- it hides the footer, nullifies the item variable, and sends them back to tab 1.
+    /**
+     * Handle a user's deselection of an item by:
+     *  -   Hiding the card footer w/ item details
+     *  -   Hiding elements that correspond to an item being selected, and showing elements that correspond to no item selection
+     *  -   Sending the user back to the first tab and disabling tabs 2 and 3
+     *  -   Destroying the item in memory
+     */
     function deselectItem() {
         // Hide footer
         $("#selectedItemInfo").addClass("d-none");
@@ -195,6 +228,10 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         item = undefined;
     }
 
+    /**
+     * Handle displaying an array of search results underneath the search bar
+     * @param {Array} itemResults 
+     */
     function displaySearchResults(itemResults) {
         // Clear current results container
         $("#thumbnailGenItemSearchResultsList").html("");
@@ -202,7 +239,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         if (Array.isArray(itemResults) && itemResults?.length > 0) {
             // Loop through item array
             for (const itemResult of itemResults) {
-                console.log(itemResult);
                 // If the item has a thumbnail, display it. Otherwise, make the layout text-only.
                 if ( itemResult.thumbnail ) {
                     $("#thumbnailGenItemSearchResultsList")
@@ -237,7 +273,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                     </div>
                 `);
         }
-        // Create an event listener for search results
+        // Create an event listener for clicks on search results
         $('.searchResult').on("click", async (event) => {
             // Prevent other parent/child elements from getting the "click" event
             event.stopPropagation();
@@ -250,12 +286,10 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     }
 
     // Thumbnail functions
-    // Update the thumbnail element on the page with the given url
-    function setThumbnailImage(url) {
-        $('#thumb').attr("src", url);
-    }
-
-    // Get the ArcGIS Portal thumbnail url for the current item
+    /**
+     * Handle retrieving the thumbnail for the current item as a Blob. Returns undefined if unsuccessful.
+     * @returns {Blob} Thumbnail image blob
+     */
     async function getPortalItemThumbnailBlob() {
         // Get portal image from Portal server
         const url = `${arcgisPortalUrl}/sharing/rest/content/items/${item.id}/info/${item.thumbnail}?token=${arcgisUserCredential.token}`;
@@ -268,40 +302,47 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
         catch (e) {
             console.error(e);
-            return null;
+            return undefined;
         }
         
         return response.data;
     }
 
     // Upload the thumbnail to the portal using a given image blob, and set it for that particular item
+    /**
+     * Attempt to set the thumbnail for the current item to be the given image blob. Throws an error if unsuccessful.
+     * @param {Blob} imageBlob The image blob to use as the new item thumbnail
+     */
     async function uploadThumbnail(imageBlob) {
         try {
             await item.updateThumbnail(params={
                 thumbnail: imageBlob,
             });
-            return true;
         }
         catch (e) {
             // If failed, log error and return the error
             console.error(e);
-            return e;
+            throw e;
         }
     }
 
-    /* Authentication actions */
+    /* Event listeners and actions */
+    // Authentication actions */
+    
     // Handle connect to portal button press
-    $('#arcgisPortalSignIn').click(() => {
+    $('#arcgisPortalSignIn').on("click", () => {
         connectToPortal();
     });
 
     // Handle sign out button press
-    $('#arcgisPortalSignOut').click(() => {
+    $('#arcgisPortalSignOut').on("click", () => {
         signInOrOut();
     });
 
-    /* Search and item selection actions */
-    // Handle search
+    // Search and item selection actions
+
+    // Handle user search. Test if we're given an item ID and display the item if it matches;
+    // otherwise, display search results for the user's query.
     $('#thumbnailGenItemSearch').on("submit", async (event) => {
         // Suppress default behavior (reloading page)
         event.preventDefault();
@@ -315,7 +356,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             // Get item thumbnail
             try {
                 itemById = await getItemById(userInput);
-                console.log(itemById);
                 displaySearchResults([itemById]);
                 return;
             }
@@ -329,7 +369,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             arcgisRequestJson = await esriRequest( searchUrl, {
                 responseType: "json"
             });
-            console.log(arcgisRequestJson);
             displaySearchResults(arcgisRequestJson?.data?.results);
         }
         catch (e) {
@@ -337,13 +376,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         }
     });
 
-    // Handle item deselection
+    // Respond to item deselection
     $('#selectedItemInfoRemove').on("click", () => {
         deselectItem();
     });
 
-    /* Thumbnail actions */
-    // Get the default thumbnail, add it to our current image
+    // Thumbnail actions
+
+    // Get the default/current thumbnail image as blob, add it to thumbnail
     $('#getItemThumbnail').on("click", async () => {
         // Get image blob
         const blob = await getPortalItemThumbnailBlob();
@@ -352,10 +392,10 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         const img = new Image();
         img.src = URLObj.createObjectURL(blob);
         // Set image
-        setThumbnailImage( img.src );
+        $('#thumb').attr("src", img.src);
     });
 
-    // Set the actual thumbnail item on the Portal
+    // Upload and set the generated thumbnail on the Portal item
     $('#uploadThumbnail').on("click", async () => {
         // Get the modal element
         const modal = bootstrap.Modal.getOrCreateInstance($("#setThumbnailModal"));
@@ -363,10 +403,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         const thumbnailBlob = document.getElementById('thumbnail').toBlob(async (blob) => {
             // Upload the thumbnail to the portal
             try {
-                const thumbnailResponse = await uploadThumbnail(blob)
-                if ( thumbnailResponse !== true ) {
-                    throw thumbnailResponse;
-                }
+                await uploadThumbnail(blob);
                 // Add success message and buttons
                 $("#setThumbnailModalBody").html(`
                     Your item's thumbnail has been updated!

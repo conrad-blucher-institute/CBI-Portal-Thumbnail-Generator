@@ -1,10 +1,11 @@
-/*  Title: Portal Thumbnail Generator library
-    Purpose: Logic behind ArcGIS Portal Thumbnail Generator Tool. Takes select items and generates a thumbnail on the
-                HTML5 canvas.
-    Author: Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
-    Date: April 18, 2023
-    How to maintain: The canvas size of 600w x 400h is hard coded in to the logic. Any change of canvas size will
-        require recoding the values throughout. Going forward, this information could be pulled out into constants.
+/*  Title:              Portal Thumbnail Generator library
+    Purpose:            Logic behind ArcGIS Portal Thumbnail Generator Tool. Takes select items and generates a thumbnail on the
+                        HTML5 canvas. Updated to include image positioning options and to work with the revamped UI.
+    Authors:            Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
+                        Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
+    Date:               April 7, 2025
+    How to maintain:    The canvas size of 600w x 400h is hard coded in to the logic. Any change of canvas size will
+                        require recoding the values throughout. Going forward, this information could be pulled out into constants.
 */
 
 /*  Title: generateThumbnail

@@ -10,7 +10,7 @@
         -   This code imports some modules from the ArcGIS Maps SDK for JS with AMD syntax (require(["esri/moduleName"], (moduleName) => { code }).
             -   To add more modules, add them to the require() array and the list of arguments for the arrow function in the right order.
         -   The UI is controlled by choosing to show or hide elements with classes (e.g., signedOutElements are elements in the page that are displayed when a user is not signed in).
-            Make sure that no sensitive information is stored here, since these are trivially easy to bypass. However, actual requests to the server (e.g., modifying thumbnails) isn't possible without a token,
+            Make sure that no sensitive information is stored here, since these are trivially easy to bypass. However, it isn't possible to update thumbnails or view private items without a token,
             which you can only get by actually going through the sign-in process.
         -   This file is split into sections for constants, objects, functions, and actions/event listeners; and subsections for authentication, portal item, and thumbnail-related code.
             Try to keep it organized that way for readability.
@@ -71,10 +71,11 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             // Load content on page for signed-in users
             // Construct sign-in message
             $("#userSignedInMessage")
-                .html(`You are signed in on
+                .html(
+                    `You are signed in on
                         <span class="fw-bold">${portal.url}</span> as
-                        <span class="fw-bold">${portal.user.username}</span>`
-                );
+                        <span class="fw-bold">${portal.user.username}</span>
+                `);
             // Hide signed out elements
             $(".signedOutElements").addClass("d-none");
             // Display signed in elements
@@ -121,7 +122,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     /**
      * An asynchronous function used to retrieve an item object from the Portal with a given item ID.
      * @param {string} itemId The item's ID
-     * @returns {Promise<object>} The item's object
+     * @returns {Promise<object>} The portal item
      */
     async function getItemById(itemId) {
         // Construct portal item object
@@ -175,26 +176,26 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             `);
         // Navigate from tab 1 to tab 2
         // Remove disabled class on tab 2 (if it's there)
-        $('#thumbnailGenItemDataTab').removeClass("disabled");
+        $("#thumbnailGenItemDataTab").removeClass("disabled");
         // Show the next tab!
         const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
         itemDataTab.show();
         // Autofill data, trigger input so the thumbnail changes
-        $('#applicationTypeInput').val(item.type).trigger('input');
+        $("#applicationTypeInput").val(item.type).trigger("input");
         // Hide any elements that correspond to no item being selected
-        $('.noSelection').addClass('d-none');
+        $(".noSelection").addClass("d-none");
         // Show elements that correspond to an item selection and the user's privileges on that item
         if ( itemEditableByUser ) {
             // Show elements that require an item selection, but exclude the ones that only show up when you don't have edit privileges
-            $('.requiresSelection')
-                .not($('.noPrivileges'))
-                    .removeClass('d-none');
+            $(".requiresSelection")
+                .not($(".noPrivileges"))
+                    .removeClass("d-none");
         }
         else {
             // Show elements that require an item selection, but exclude the ones that only show up when you DO have edit privileges
-            $('.requiresSelection')
-                .not($('.requiresPrivileges'))
-                    .removeClass('d-none');
+            $(".requiresSelection")
+                .not($(".requiresPrivileges"))
+                    .removeClass("d-none");
         }
     }
 
@@ -209,14 +210,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Hide footer
         $("#selectedItemInfo").addClass("d-none");
         // Hide items that correspond to item being selected, show items that correspond to no selected item
-        $('.noSelection').removeClass('d-none');
-        $('.requiresSelection').addClass('d-none');
+        $(".noSelection").removeClass("d-none");
+        $(".requiresSelection").addClass("d-none");
         // Send user back to tab 1
         const itemSelectTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenSelectItem"]'));
         itemSelectTab.show();
         // Disable other tabs
-        $('#thumbnailGenItemDataTab').addClass("disabled");
-        $('#thumbnailGenMakeThumbnailTab').addClass("disabled");
+        $("#thumbnailGenItemDataTab").addClass("disabled");
+        $("#thumbnailGenMakeThumbnailTab").addClass("disabled");
         // Destroy item in memory
         item.destroy();
         // Make item point to undefined
@@ -237,39 +238,44 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 // If the item has a thumbnail, display it. Otherwise, make the layout text-only.
                 if ( itemResult.thumbnail ) {
                     $("#thumbnailGenItemSearchResultsList")
-                    .append(`<button type="button" class="searchResult list-group-item list-group-item-action" value="${itemResult.id}">
-                                <div class="d-flex gap-3 align-items-center">
-                                    <div class="w-25 d-flex align-items-center">
-                                        <img
-                                            class="rounded img-fluid"
-                                            src="${arcgisPortalUrl}/sharing/rest/content/items/${itemResult.id}/info/${itemResult.thumbnail}?token=${arcgisUserCredential.token}"
-                                        >
-                                    </div>
-                                    <div class="w-75">
-                                        <div class="fs-5">${itemResult.title}</div>
-                                        <div class="fs-6">${itemResult.type}</div>
-                                    </div>
+                    .append(`
+                        <button type="button" class="searchResult list-group-item list-group-item-action" value="${itemResult.id}">
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="w-25 d-flex align-items-center">
+                                    <img
+                                        class="rounded img-fluid"
+                                        src="${arcgisPortalUrl}/sharing/rest/content/items/${itemResult.id}/info/${itemResult.thumbnail}?token=${arcgisUserCredential.token}"
+                                    >
                                 </div>
-                            </button>`);
+                                <div class="w-75">
+                                    <div class="fs-5">${itemResult.title}</div>
+                                    <div class="fs-6">${itemResult.type}</div>
+                                </div>
+                            </div>
+                        </button>
+                    `);
                 }
                 else {
                     $("#thumbnailGenItemSearchResultsList")
-                    .append(`<button type="button" href="#" class="list-group-item list-group-item-action">
+                        .append(`
+                            <button type="button" href="#" class="list-group-item list-group-item-action">
                                 <div class="fs-5">${itemResult.title}</div>
                                 <div class="fs-6">${itemResult.type}</div>
-                            </button>`);
+                            </button>
+                        `);
                 }
             }
         }
         else {
-            $("#thumbnailGenItemSearchResultsList").html(`
+            $("#thumbnailGenItemSearchResultsList")
+                .html(`
                     <div class="alert alert-danger" role="alert">
                         No results found.
                     </div>
                 `);
         }
         // Create an event listener for clicks on search results
-        $('.searchResult').on("click", async (event) => {
+        $(".searchResult").on("click", async (event) => {
             // Prevent other parent/child elements from getting the "click" event
             event.stopPropagation();
             event.stopImmediatePropagation();
@@ -325,12 +331,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     // Authentication actions */
     
     // Handle connect to portal button press
-    $('#arcgisPortalSignIn').on("click", () => {
+    $("#arcgisPortalSignIn").on("click", () => {
         connectToPortal();
     });
 
     // Handle sign out button press
-    $('#arcgisPortalSignOut').on("click", () => {
+    $("#arcgisPortalSignOut").on("click", () => {
         signInOrOut();
     });
 
@@ -338,12 +344,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
     // Handle user search. Test if we're given an item ID and display the item if it matches;
     // otherwise, display search results for the user's query.
-    $('#thumbnailGenItemSearch').on("submit", async (event) => {
+    $("#thumbnailGenItemSearch").on("submit", async (event) => {
         // Suppress default behavior (reloading page)
         event.preventDefault();
 
         // Get user's input
-        const userInput = $('#thumbnailGenItemSearchInput').val();
+        const userInput = $("#thumbnailGenItemSearchInput").val();
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
         const itemById = undefined;
         // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.
@@ -372,14 +378,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
     });
 
     // Respond to item deselection
-    $('#selectedItemInfoRemove').on("click", () => {
+    $("#selectedItemInfoRemove").on("click", () => {
         deselectItem();
     });
 
     // Thumbnail actions
 
     // Get the default/current thumbnail image as blob, add it to thumbnail
-    $('#getItemThumbnail').on("click", async () => {
+    $("#getItemThumbnail").on("click", async () => {
         // Get image blob
         const blob = await getPortalItemThumbnailBlob();
         // Create image blob url
@@ -387,43 +393,47 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         const img = new Image();
         img.src = URLObj.createObjectURL(blob);
         // Set image
-        $('#thumb').attr("src", img.src);
+        $("#thumb").attr("src", img.src);
     });
 
     // Upload and set the generated thumbnail on the Portal item
-    $('#uploadThumbnail').on("click", async () => {
+    $("#uploadThumbnail").on("click", async () => {
         // Get the modal element
         const modal = bootstrap.Modal.getOrCreateInstance($("#setThumbnailModal"));
         // Get the canvas element, convert it to a blob
-        const thumbnailBlob = document.getElementById('thumbnail').toBlob(async (blob) => {
+        document.getElementById("thumbnail").toBlob(async (blob) => {
             // Upload the thumbnail to the portal
             try {
                 await uploadThumbnail(blob);
                 // Add success message and buttons
-                $("#setThumbnailModalBody").html(`
-                    Your item's thumbnail has been updated!
-                `);
-                $("#setThumbnailModalFooter").html(`
-                    <a class="btn btn-primary" target="_blank" href="${arcgisPortalUrl}/home/item.html?id=${item.id}">View item</a>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>                
-                `);
+                $("#setThumbnailModalBody")
+                    .html(`
+                        Your item's thumbnail has been updated!
+                    `);
+                $("#setThumbnailModalFooter")
+                    .html(`
+                        <a class="btn btn-primary" target="_blank" href="${arcgisPortalUrl}/home/item.html?id=${item.id}">View item</a>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>                
+                    `);
                 // Show the success modal
                 modal.show();
             }
             catch (e) {
-                // Show the error modal
-                $("#setThumbnailModalBody").html(`
-                    Something went wrong with updating your item.
-                    <div class="card text-bg-light">
-                        <div class="card-body">
-                            <pre><code>${e}</code></pre>
+                // Add error text
+                $("#setThumbnailModalBody")
+                    .html(`
+                        Something went wrong with updating your item.
+                        <div class="card text-bg-light">
+                            <div class="card-body">
+                                <pre><code>${e}</code></pre>
+                            </div>
                         </div>
-                    </div>
-                `);
-                $("#setThumbnailModalFooter").html(`
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>                
-                `);
-                // Show the success modal
+                    `);
+                $("#setThumbnailModalFooter")
+                    .html(`
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>                
+                    `);
+                // Show the error modal
                 modal.show();
             }
         }, "image/png");

@@ -32,7 +32,6 @@ function generateThumbnail(){
     // Draw uploaded thumbnail (defaults to CBI logo)
     var thumbImg = new Image();
     thumbImg.src = $("#thumb").attr('src');
-	// ctx.drawImage(thumbImg, 0, 0, canvasWidth, canvasHeight);
     
     // Change position of image depending on what option is selected in the form. Defaults to stretching the image.
     // Fetch image position, set as imageStretch by default

@@ -13,7 +13,7 @@ How to maintain: Two selects should be updated with new application types and so
                     path to default logo if desired.
 Required javascript libraries:
     *PortalThumbnailGenerator.js - Custom library, handles thumbnail generation
-    *PortalAuthentication.js - Custom library, handles ArcGIS Portal authentication and ArcGIS item queries
+    *PortalAuthentication.js - Custom library, handles ArcGIS Portal authentication and interactions with Portal items
     *Bootstrap 5
     *jQuery
 -->
@@ -218,7 +218,6 @@ Required javascript libraries:
                             <div class="form-group mb-2">
                                 <label for="applicationType" class="form-label fw-bold">Item Type</label>
                                 <input class="form-control" list="applicationTypeDatalist" id="applicationTypeInput" placeholder="Click or type here to choose an item type">
-                                <!-- TODO: remove the optional input unless if you want to make it such that it only accepts custom input with a checkbox -->
                                 <datalist id="applicationTypeDatalist">
                                     <option value="360 VR Experience">
                                     <option value="3DTilesPackage">
@@ -372,10 +371,6 @@ Required javascript libraries:
                                     <option value="iWork Numbers">
                                     <option value="iWork Pages">
                                 </datalist>
-                                <span id="customApplicationType" style="display:none">
-                                    <label for="customapplicationtype">Other Item Type</label>
-                                    <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
-                                </span>
                             </div>
                             <!-- External source selection -->
                             <div class="form-check mb-2">
@@ -491,6 +486,7 @@ Required javascript libraries:
                                     </div>
                                 </div>
                             </div>
+                            <!-- Controls for image positioning -->
                             <fieldset id="imagePositionControls">
                                 <legend class="form-label fw-bold fs-6">Screenshot position</legend>
                                 <div class="d-inline-flex flex-fill w-100">
@@ -514,6 +510,7 @@ Required javascript libraries:
                                     </div>
                                 </div>
                             </fieldset>
+                            <!-- Actions: download or upload thumbnail. Change the upload button displayed based on user account and permissions status -->
                             <div class="d-flex flex-fill gap-3">
                                 <div class="w-50">
                                     <button type="button" class="btn btn-primary w-100 mt-2" id="downloadThumbnail">

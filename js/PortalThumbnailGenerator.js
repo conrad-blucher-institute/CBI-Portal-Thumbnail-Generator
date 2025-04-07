@@ -128,8 +128,8 @@ function generateThumbnail(){
     // Rotate canvas so text can be drawn vertical
     ctx.rotate(3 * Math.PI / 2);
     var typeTitle = $("#applicationTypeInput").val();
-    // TODO: determine if this placeholder is a good placeholder :)
-    if ( typeTitle == "" ) {
+    // Show placeholder
+    if ( !typeTitle ) {
         typeTitle = "Item type";
     }
     // Check to see if we need to reduce font size. If overruns area (95px), then reduce font size by 1 and repeat.
@@ -233,18 +233,6 @@ function toggleCustomSourceUpload(evt){
     }
 }
 
-/*  Title: Toggle custom application type visibility
-    Purpose: Toggles the visibility of custom application type based on if they choose 'Other'
-*/
-// TODO: determine if function is necessary anymore
-function toggleCustomApplicationType(evt){
-    if ($("#applicationTypeDatalist option:selected").attr('value') == 'other'){
-        document.getElementById('customApplicationType').style.display="block";
-    } else {
-        document.getElementById('customApplicationType').style.display="none";
-    }
-}
-
 /*  Title: Toggle image upload controls
     Purposes: Handles the user's toggle of ArcGIS Portal, the clipboard, or an image file upload for their image source
 */
@@ -297,7 +285,6 @@ $('document').ready(function(){
 
     // If application type changes input, generate thumbnail
     $('#applicationTypeInput').on('input', () => {
-        toggleCustomApplicationType(); // TODO: determine if this is necessary
         generateThumbnail();
     });
 

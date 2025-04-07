@@ -176,9 +176,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             `);
         // Navigate from tab 1 to tab 2
         // Remove disabled class on tab 2 (if it's there)
-        $("#thumbnailGenItemDataTab").removeClass("disabled");
+        $("#itemDataTab").removeClass("disabled");
         // Show the next tab!
-        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
+        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#tabs button[data-bs-target="#itemData"]'));
         itemDataTab.show();
         // Autofill data, trigger input so the thumbnail changes
         $("#applicationTypeInput").val(item.type).trigger("input");
@@ -213,11 +213,11 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         $(".noSelection").removeClass("d-none");
         $(".requiresSelection").addClass("d-none");
         // Send user back to tab 1
-        const itemSelectTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenSelectItem"]'));
+        const itemSelectTab = bootstrap.Tab.getOrCreateInstance($('#tabs button[data-bs-target="#selectItem"]'));
         itemSelectTab.show();
         // Disable other tabs
-        $("#thumbnailGenItemDataTab").addClass("disabled");
-        $("#thumbnailGenMakeThumbnailTab").addClass("disabled");
+        $("#itemDataTab").addClass("disabled");
+        $("#makeThumbnailTab").addClass("disabled");
         // Destroy item in memory
         item.destroy();
         // Make item point to undefined
@@ -230,14 +230,14 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
      */
     function displaySearchResults(itemResults) {
         // Clear current results container
-        $("#thumbnailGenItemSearchResultsList").html("");
+        $("#itemSearchResultsList").html("");
         // Only display a list if it's a list and if it has a length value over 0.
         if (Array.isArray(itemResults) && itemResults?.length > 0) {
             // Loop through item array
             for (const itemResult of itemResults) {
                 // If the item has a thumbnail, display it. Otherwise, make the layout text-only.
                 if ( itemResult.thumbnail ) {
-                    $("#thumbnailGenItemSearchResultsList")
+                    $("#itemSearchResultsList")
                     .append(`
                         <button type="button" class="searchResult list-group-item list-group-item-action" value="${itemResult.id}">
                             <div class="d-flex gap-3 align-items-center">
@@ -256,7 +256,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                     `);
                 }
                 else {
-                    $("#thumbnailGenItemSearchResultsList")
+                    $("#itemSearchResultsList")
                         .append(`
                             <button type="button" href="#" class="list-group-item list-group-item-action">
                                 <div class="fs-5">${itemResult.title}</div>
@@ -267,7 +267,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             }
         }
         else {
-            $("#thumbnailGenItemSearchResultsList")
+            $("#itemSearchResultsList")
                 .html(`
                     <div class="alert alert-danger" role="alert">
                         No results found.
@@ -344,12 +344,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
     // Handle user search. Test if we're given an item ID and display the item if it matches;
     // otherwise, display search results for the user's query.
-    $("#thumbnailGenItemSearch").on("submit", async (event) => {
+    $("#itemSearch").on("submit", async (event) => {
         // Suppress default behavior (reloading page)
         event.preventDefault();
 
         // Get user's input
-        const userInput = $("#thumbnailGenItemSearchInput").val();
+        const userInput = $("#itemSearchInput").val();
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
         const itemById = undefined;
         // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.

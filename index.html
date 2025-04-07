@@ -154,20 +154,20 @@ Required javascript libraries:
                 <div class="card thumbnailGenCard d-flex">
                     <!-- Tabs -->
                     <div class="card-header">
-                        <ul class="nav nav-pills nav-justified card-header-pills" id="thumbnailGenTabs" role="tablist">
+                        <ul class="nav nav-pills nav-justified card-header-pills" id="tabs" role="tablist">
                         <!-- <ul class="nav nav-tabs nav-fill card-header-tabs"  id="thumbnail-gen-tabs" role="tablist"> -->
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="thumbnailGenSelectItemTab" data-bs-toggle="pill" data-bs-target="#thumbnailGenSelectItem" type="button" role="tab" aria-controls="thumbnailGenSelectItem" aria-selected="true">
+                                <button class="nav-link active" id="selectItemTab" data-bs-toggle="pill" data-bs-target="#selectItem" type="button" role="tab" aria-controls="selectItem" aria-selected="true">
                                     1. Select item
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link disabled" id="thumbnailGenItemDataTab" data-bs-toggle="pill" data-bs-target="#thumbnailGenItemData" type="button" role="tab" aria-controls="thumbnailGenItemData" aria-selected="true" aria-disabled="true">
+                                <button class="nav-link disabled" id="itemDataTab" data-bs-toggle="pill" data-bs-target="#itemData" type="button" role="tab" aria-controls="itemData" aria-selected="true" aria-disabled="true">
                                     2. Enter item data
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link disabled" id="thumbnailGenMakeThumbnailTab" data-bs-toggle="pill" data-bs-target="#thumbnailGenMakeThumbnail" type="button" role="tab" aria-controls="thumbnailGenMakeThumbnail" aria-selected="true" aria-disabled="true">
+                                <button class="nav-link disabled" id="makeThumbnailTab" data-bs-toggle="pill" data-bs-target="#makeThumbnail" type="button" role="tab" aria-controls="makeThumbnail" aria-selected="true" aria-disabled="true">
                                     3. Make thumbnail
                                 </button>
                             </li>
@@ -177,41 +177,41 @@ Required javascript libraries:
                     <!-- Tab content -->
                     <div class="tab-content mt-auto mb-auto">
                         <!-- 1. Select item -->
-                        <div class="card-body tab-pane fade show active" role="tabpanel" id="thumbnailGenSelectItem" aria-labelledby="pills-home-tab" tabindex="0">
+                        <div class="card-body tab-pane fade show active" role="tabpanel" id="selectItem" aria-labelledby="pills-home-tab" tabindex="0">
                             <div class="card-title fs-5">Select your item</div>
                             <p class="card-text">Choose your item from the CBI Maps portal, or skip this step and enter the item's data manually.</p>
                             <div class="card-title fs-6">CBI Maps item search / item ID</div>
                             <div class="input-group signedOutElements">
-                                <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="thumbnailGenItemSearchInputSignedOut" aria-describedby="thumbnailGenItemSearchButtonSignedOut" disabled>
-                                <button class="btn btn-outline-secondary" type="button" id="thumbnailGenItemSearchButtonSignedOut" disabled>
+                                <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="itemSearchInputSignedOut" aria-describedby="itemSearchButtonSignedOut" disabled>
+                                <button class="btn btn-outline-secondary" type="button" id="itemSearchButtonSignedOut" disabled>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                                     </svg>
                                 </button>
                             </div>
                             <div class="signedInElements d-none">
-                                <form id="thumbnailGenItemSearch">
+                                <form id="itemSearch">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="thumbnailGenItemSearchInput">
-                                        <button class="btn btn-outline-secondary" type="submit" id="thumbnailGenItemSearchButton">
+                                        <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="itemSearchInput">
+                                        <button class="btn btn-outline-secondary" type="submit" id="itemSearchButton">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                                             </svg>
                                         </button>
                                     </div>
                                 </form>
-                                <div class="mt-2" id="thumbnailGenItemSearchResults">
-                                    <ul class="list-group searchResults overflow-auto" id="thumbnailGenItemSearchResultsList"></ul>
+                                <div class="mt-2" id="itemSearchResults">
+                                    <ul class="list-group searchResults overflow-auto" id="itemSearchResultsList"></ul>
                                 </div>
                             </div>
                             <div class="text-center my-3 fst-italic">or</div>
-                            <button type="button" class="btn btn-light w-100" id="thumbnailGenSkipItemSelection">
+                            <button type="button" class="btn btn-light w-100" id="skipItemSelection">
                                 Skip
                             </button>
                         </div>
 
                         <!-- 2. Enter item data -->
-                        <div class="card-body tab-pane fade" role="tabpanel" id="thumbnailGenItemData" aria-labelledby="pills-home-tab" tabindex="0">
+                        <div class="card-body tab-pane fade" role="tabpanel" id="itemData" aria-labelledby="pills-home-tab" tabindex="0">
                             <div class="card-title fs-5">Enter item data</div>
                             <p class="card-text">Enter the item's data. If you selected an item from the portal, some of this information was autofilled for you.</p>
                             <!-- Item type selection -->
@@ -406,13 +406,13 @@ Required javascript libraries:
                                 <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
                             </div>
                             <!-- Next step -->
-                            <button type="button" class="btn btn-primary w-100 mt-2" id="thumbnailGenItemDataNextStep">
+                            <button type="button" class="btn btn-primary w-100 mt-2" id="itemDataNextStep">
                                 Next step
                             </button>
                         </div>
 
                         <!-- 3. Make thumbnail -->
-                        <div class="card-body tab-pane fade" role="tabpanel" id="thumbnailGenMakeThumbnail" aria-labelledby="pills-home-tab" tabindex="0">
+                        <div class="card-body tab-pane fade" role="tabpanel" id="makeThumbnail" aria-labelledby="pills-home-tab" tabindex="0">
                             <div class="card-title fs-5">Make thumbnail</div>
                             <p class="card-text">Customize your thumbnail and push it to your item on the portal, or just download it.</p>
                             <!-- Screenshot file upload -->

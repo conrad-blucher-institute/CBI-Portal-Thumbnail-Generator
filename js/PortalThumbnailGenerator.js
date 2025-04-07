@@ -349,7 +349,7 @@ $('document').ready(function(){
         // Remove pasted image alert
         $("#pasteImageAlert").addClass("d-none");
         // Only trigger this if we're on the third step (Make Thumbnail)
-        if ( $('#thumbnailGenTabs button[data-bs-target="#thumbnailGenMakeThumbnail"]').hasClass("active") ) {
+        if ( $('#tabs button[data-bs-target="#makeThumbnail"]').hasClass("active") ) {
             // Select the clipboard option on the UI
             $("#imageSourceClipboard").trigger('click');
             // The event here is a ClipboardEvent, which is only triggered on an actual paste (Ctrl + V) -- so we can get the image directly from it.
@@ -389,20 +389,20 @@ $('document').ready(function(){
 
     /* Step-by-step thumbnail generator events */
     // React to "skip" button on step 1 by going straight to step 2
-    $('#thumbnailGenSkipItemSelection').on('click', () => {
+    $('#skipItemSelection').on('click', () => {
         // Remove disabled class after skipping
-        $('#thumbnailGenItemDataTab').removeClass("disabled");
+        $('#itemDataTab').removeClass("disabled");
         // Show the next tab!
-        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenItemData"]'));
+        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#tabs button[data-bs-target="#itemData"]'));
         itemDataTab.show();
     });
 
     // Go from step 2 to step 3
-    $('#thumbnailGenItemDataNextStep').on('click', () => {
+    $('#itemDataNextStep').on('click', () => {
         // Remove disabled class for step 3
-        $('#thumbnailGenMakeThumbnailTab').removeClass("disabled");
+        $('#makeThumbnailTab').removeClass("disabled");
         // Show the next tab!
-        const makeThumbnailTab = bootstrap.Tab.getOrCreateInstance($('#thumbnailGenTabs button[data-bs-target="#thumbnailGenMakeThumbnail"]'));
+        const makeThumbnailTab = bootstrap.Tab.getOrCreateInstance($('#tabs button[data-bs-target="#makeThumbnail"]'));
         makeThumbnailTab.show();
     });
 });

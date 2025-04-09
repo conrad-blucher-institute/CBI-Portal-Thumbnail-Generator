@@ -147,9 +147,16 @@ function generateThumbnail(){
     ctx.restore();
 
     // Add source icon (logo)
-    var logoImage = "logos/" + $("#sourceIcon option:selected").attr('value');
-    if (logoImage == "logos/Other.png") {
+    let logoImage;
+    const selectedLogo = $("#sourceIcon option:selected").attr('value');
+    if (selectedLogo === "Other") {
         logoImage = $("#customlogofile").attr('src');
+    }
+    else if (selectedLogo === "None") {
+        logoImage = null;
+    }
+    else {
+        logoImage = selectedLogo;
     }
 
     var newImage = new Image();
@@ -226,7 +233,7 @@ function handleOtherSourceIcon(evt) {
 */
 
 function toggleCustomSourceUpload(evt){
-    if ($("#sourceIcon option:selected").attr('value') == 'Other.png'){
+    if ($("#sourceIcon option:selected").attr('value') == 'Other'){
         document.getElementById('customLogoBlock').style.display="block";
     } else {
         document.getElementById('customLogoBlock').style.display="none";
@@ -267,6 +274,62 @@ function setImageBlobAsThumbnailSrc(imageBlob) {
     }
 }
 
+/**
+ * A handler that retrieves the images from the given ClipboardEvent as a blob, and returns it in a callback.
+ * It calls the callback function with an argument of undefined if the item(s) on the clipboard aren't images.
+ * @param {ClipboardEvent} pasteEvent The clipboard event sent by the browser on a user's paste action 
+ * @param {(blob: Blob) => {}} callback The callback function to call with the image blob as its argument
+ */
+function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback) {
+    // Check if a callback function is given
+    if ( typeof(callback) == "function" ) {
+        // If the clipboard is blank, call the callback function w/ undefined
+        if(pasteEvent.clipboardData == false){
+            callback(undefined);
+        };
+        // Get items on the clipboard
+        const items = pasteEvent.clipboardData.items;
+        // If the items are undefined, call callback w/ undefined
+        if(items == undefined){
+            callback(undefined);
+        };
+        
+        // Resolves as true if any item is an image, and false if none of them are.
+        let isAnItemImage = false;
+
+        // Go through items, call callback function and set bool as true if an item is an image
+        for (const item of items) {
+            if (item.type.indexOf("image") != -1) {
+                const blob = item.getAsFile();
+                callback( blob );
+                isAnItemImage = true;
+            }
+        }
+    
+        // If no item on the clipboard is an image, call the callback fn w/ undefined.
+        if ( !isAnItemImage ) {
+            callback( undefined );
+        }
+    
+    }
+    
+}
+
+/**
+ * A function that gets the existing source logos from the logos constant in logos/logoList.js selectable logo options
+ */
+function setSourceLogos() {
+    for (const logo of LOGO_FILES) {
+        // Split the logo at the final dot (i.e. the file extension), and use the first part as what's displayed.
+        $("#sourceIcon")
+            .append(`
+                <option value="logos/${logo}">${logo.substring(0, logo.lastIndexOf('.'))}</option>
+            `);
+    }
+    // Set default icon
+    $("#sourceIcon").val(`logos/${DEFAULT_LOGO}`).change();
+}
+
 /*  Title: document on ready event
     Purpose: Wires up controls when DOM has loaded.
  */
@@ -278,7 +341,8 @@ $('document').ready(function(){
         alert('The File APIs are not fully supported in this browser. This tool will not work.');
     }
 
-    
+    // Get all of the source logos
+    setSourceLogos();
 
     // Do an initial creation of the thumbnail.
     generateThumbnail();
@@ -406,40 +470,3 @@ $('document').ready(function(){
         makeThumbnailTab.show();
     });
 });
-
-// This handler retrieves the images from the given ClipboardEvent as a blob and returns it in a callback.
-// Calls the callback function w/ an argument of undefined if the item(s) on the clipboard aren't images.
-function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback) {
-    // Check if a callback function is given
-    if ( typeof(callback) == "function" ) {
-        // If the clipboard is blank, call the callback function w/ undefined
-        if(pasteEvent.clipboardData == false){
-            callback(undefined);
-        };
-        // Get items on the clipboard
-        const items = pasteEvent.clipboardData.items;
-        // If the items are undefined, call callback w/ undefined
-        if(items == undefined){
-            callback(undefined);
-        };
-        
-        // Resolves as true if any item is an image, and false if none of them are.
-        let isAnItemImage = false;
-
-        // Go through items, call callback function and set bool as true if an item is an image
-        for (const item of items) {
-            if (item.type.indexOf("image") != -1) {
-                const blob = item.getAsFile();
-                callback( blob );
-                isAnItemImage = true;
-            }
-        }
-    
-        // If no item on the clipboard is an image, call the callback fn w/ undefined.
-        if ( !isAnItemImage ) {
-            callback( undefined );
-        }
-    
-    }
-    
-}

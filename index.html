@@ -13,7 +13,7 @@ How to maintain:    Two selects should be updated with new application types and
 Required javascript libraries:
     - PortalThumbnailGenerator.js - Custom library, handles thumbnail generation
     - PortalAuthentication.js - Custom library, handles ArcGIS Portal authentication and interactions with Portal items
-    - Bootstrap 5
+    - Bootstrap 5.3.3
     - jQuery 3.7.1
 -->
 <head>
@@ -384,16 +384,8 @@ Required javascript libraries:
                                 <!-- Each option should have a value. Each value should be the file name
                                     in the logos directory (no spaces in file name please)-->
                                 <select class="form-select" id="sourceIcon">
-                                    <option value="Other.png">Other (Upload Logo)</option>
-                                    <option value="None.png">None</option>
-                                    <option value="ai2es-logo.png">AI2ES</option>
-                                    <option value="cats-logo.png">CATS</option>
-                                    <option value="CBI.png" selected="selected">CBI</option>
-                                    <option value="cdl-logo.png">CDL Lab</option>
-                                    <option value="goal-logo.png">GOAL Lab</option>
-                                    <option value="mantis-logo.jpg">MANTIS Lab</option>
-                                    <option value="TNRIS.png">TNRIS</option>
-                                    <option value="tsrc-logo.png">TSRC</option>
+                                    <option value="Other">Other (Upload Logo)</option>
+                                    <option value="None">None</option>
                                 </select>
                             </div>
                             <!-- Custom source icon file upload [hidden by default] -->
@@ -402,7 +394,7 @@ Required javascript libraries:
                                     <label class="form-label" for="customlogo">Other Source Icon</label>
                                     <input class='form-control' type="file" id="customlogo" name="customlogo" />
                                 </div>
-                                <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
+                                <output id="logoDetails" class="d-none"><img id="customlogofile" style="display:none" /></output>
                             </div>
                             <!-- Next step -->
                             <button type="button" class="btn btn-primary w-100 mt-2" id="itemDataNextStep">
@@ -587,9 +579,12 @@ Required javascript libraries:
             </div>
         </div>
     </div>
-
+<!-- Load jQuery -->
 <script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
+<!-- Load Bootstrap -->
 <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+<!-- Load logo list constant -->
+<script type="text/javascript" src="logos/logoList.js"></script>
 <!-- ArcGIS Calcite elements, core API -->
 <!-- Load Calcite -->
 <script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>

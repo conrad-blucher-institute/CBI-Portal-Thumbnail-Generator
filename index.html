@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-Title: ArcGIS Portal Thumbnail Generator
-Purpose: To allow people to generate a thumbnail for use in ArcGIS Portal. By selecting a few options and uploading
-            the thumbnail they want to use, this page generates the thumbnail for them.
-Author: Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
-Date: April 18, 2023
-How to maintain: Two selects should be updated with new application types and source icons. When updating icons,
-                    place them in the logos directory and set the value of the option to the logo file name.
-                 Image tag with id 'thumb' sets default thumbnail background. Is hidden from visibility. Change
-                    path to default logo if desired.
+Title:              ArcGIS Portal Thumbnail Generator
+Purpose:            To allow people to generate a thumbnail for use in ArcGIS Portal. By selecting a few options and uploading
+                    the thumbnail they want to use, this page generates the thumbnail for them.
+Authors:            Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
+                    Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
+Date:               April 9, 2025
+How to maintain:    Two selects should be updated with new application types and source icons. When updating icons, place them in the logos
+                    directory and set the value of the option to the logo file name.
+                    Image tag with id 'thumb' sets default thumbnail background. Is hidden from visibility. Change path to default logo if desired.
 Required javascript libraries:
-    *PortalThumbnailGenerator.js - Custom code for this project
-    *Bootstrap
-    *jQuery
+    - PortalThumbnailGenerator.js - Custom library, handles thumbnail generation
+    - PortalAuthentication.js - Custom library, handles ArcGIS Portal authentication and interactions with Portal items
+    - Bootstrap 5.3.3
+    - jQuery 3.7.1
 -->
 <head>
     <meta charset="UTF-8">
@@ -37,165 +38,562 @@ Required javascript libraries:
         </div>
         <div class="row">
             <div class="alert alert-primary" role="alert">
-                <div class="alert-header d-flex fs-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                <div class="alert-header d-flex fs-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi mt-1 bi-info-circle-fill" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
                     </svg>
                     <div class="alert-header-text">
                         <h2 class="ms-2 alert-heading">Instructions</h2>
                     </div>
                 </div>
-                <div>   
-                    <ol>
-                        <li>Select the portal item type.</li>
-                        <li>Check box if external source.</li>
-                        <li>Select the source logo.</li>
-                        <li>Choose screenshot to insert <i>or if the screenshot is in your clipboard,
-                                click CTRL-V to paste directly onto this page.</i></li>
-                        <li>Download the thumbnail to your computer.</li>
-                    </ol>
-    
+                <div class="container px-3 pb-3">
+                    <div class="row gx-4">
+                        <div class="col-6 col-md d-flex flex-column gap-2">
+                            <div class="fs-1 lh-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="fs-4 fw-bold">1.</span>
+                                <span class="fs-5 fw-bold">Sign in</span>
+                            </div>
+                            <div>
+                                Sign into CBI Maps if you want to get an item's data and set its thumbnail.
+                            </div>
+                        </div>
+                        <div class="col-6 col-md d-flex flex-column gap-2">
+                            <div class="fs-1 lh-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
+                                    <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5z"/>
+                                    <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="fs-4 fw-bold">2.</span>
+                                <span class="fs-5 fw-bold">Choose an item</span>
+                            </div>
+                            <div>
+                                Choose an item from CBI Maps, or skip this step if you just want a thumbnail image.
+                            </div>
+                        </div>
+                        <div class="col-6 col-md d-flex flex-column gap-2">
+                            <div class="fs-1 lh-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ul" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="fs-4 fw-bold">3.</span>
+                                <span class="fs-5 fw-bold">Enter item data</span>
+                            </div>
+                            <div>
+                                Put in your item's data -- if you chose an item, some of this info will be automatically filled in for you.
+                            </div>
+                        </div>
+                        <div class="col-6 col-md d-flex flex-column gap-2">
+                            <div class="fs-1 lh-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-image" viewBox="0 0 16 16">
+                                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                    <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="fs-4 fw-bold">4.</span>
+                                <span class="fs-5 fw-bold">Make your thumbnail</span>
+                            </div>
+                            <div>
+                                Make a branded thumbnail image using the existing thumbnail, or with your own image.
+                            </div>
+                        </div>
+                        <div class="col-6 col-md d-flex flex-column gap-2">
+                            <div class="fs-1 lh-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-upload" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
+                                    <path fill-rule="evenodd" d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="fs-4 fw-bold">5.</span>
+                                <span class="fs-5 fw-bold">Download or upload!</span>
+                            </div>
+                            <div>
+                                Download your thumbnail, or upload it directly to CBI Maps!
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xl-5 col-lg-4 order-2 order-lg-1">
-                <form class="form-horizontal">
-                    <!-- Item type selection -->
-                    <div class="form-group mb-2">
-                        <!-- Application type select. Add new entries for new types of applications.
-                            I think this is a complete list of items possible
-                            https://pro.arcgis.com/en/pro-app/latest/help/projects/supported-data-types-and-items.htm
-                            but don't want to add them all to junk up the list.-->
-                        <label for="applicationType" class="form-label">Item Type</label>
-                        <select class="form-select" id="applicationType">
-                            <option value='other'>Other (Enter Type)</option>
-                            <option>CSV</option>
-                            <option>Dashboard</option>
-                            <option>Document</option>
-                            <option>Feature Layer</option>
-                            <option>File</option>
-                            <option>Gallery</option>
-                            <option>Imagery Layer</option>
-                            <option>Locator</option>
-                            <option selected="selected">Map Image Layer</option>
-                            <option>Mobile Map Package</option>
-                            <option>Scene Layer</option>
-                            <option>Service Definition</option>
-                            <option>Tile Layer</option>
-                            <option>Vector Tile Layer</option>
-                            <option>Web Tool</option>
-                            <option>Web App</option>
-                            <option>Web Map</option>
-                            <option>Web Scene</option>
-                            <option>WFS Layer</option>
-                            <option>WMS Layer</option>
-                        </select>
-                        <span id="customApplicationType" style="display:none">
-                            <label for="customapplicationtype">Other Item Type</label>
-                            <input class='form-control' type="text" id="customapplicationtype" name="customapplicationtype" />
-                        </span>
-                    </div>
-                    <!-- External source selection -->
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="external">
-                        <label class="form-check-label" for="external">
-                            External Source (References service on an external server)
-                        </label>
-                    </div>
-                    <!-- Source logo selection -->
-                    <div class="form-group mb-2">
-                        <label for="sourceIcon" class="form-label">Source Logo</label>
-                        <!-- Each option should have a value. Each value should be the file name
-                            in the logos directory (no spaces in file name please)-->
-                        <select class="form-select" id="sourceIcon">
-                            <option value="Other.png">Other (Upload Logo)</option>
-                            <option value="None.png">None</option>
-                            <option value="ai2es-logo.png">AI2ES</option>
-                            <option value="cats-logo.png">CATS</option>
-                            <option value="CBI.png" selected="selected">CBI</option>
-                            <option value="cdl-logo.png">CDL Lab</option>
-                            <option value="goal-logo.png">GOAL Lab</option>
-                            <option value="mantis-logo.jpg">MANTIS Lab</option>
-                            <option value="TNRIS.png">TNRIS</option>
-                            <option value="tsrc-logo.png">TSRC</option>
-                        </select>
-                    </div>
-                    <!-- Custom source icon file upload [hidden by default] -->
-                    <div class="form-group mb-2">
-                        <div id="customLogoBlock" style="display:none">
-                            <label class="form-label" for="customlogo">Other Source Icon</label>
-                            <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                <div class="alert alert-light form-text" role="alert" id="userInfo">
+                    <div class="d-flex align-items-center signedOutElements">
+                        <!-- Message displayed when signed in, sign-in button -->
+                        <div class="me-auto" id="userSignedOutMessage">
+                            You are not signed into CBI Maps.
                         </div>
-                        <output id="logoDetails" class="d-none"><img src = "logos/Other.png" id="customlogofile" style="display:none" /></output>
-                    </div>
-                    <!-- Screenshot file upload -->
-                    <div class="form-group mb-2">
-                        <label for="file" class="form-label">Screenshot to Insert</label>
-                        <input class='form-control' type="file" id="file" name="file" />
-                        <div class="form-text">
-                            For best results, your screenshot should have an aspect ratio 1.5:1.<br />
-                            Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
-                            <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
-                            target="_blank">Windows Snipping Tool</a> or 
-                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
+                        <div>
+                            <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignIn">Sign in</button>
                         </div>
-                        <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
-                        <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
                     </div>
-                    <!-- Options for the screenshot's position inside the viewable area -->
-                    <p></p>
-                </form>
+                    <div class="d-flex align-items-center d-none signedInElements">
+                        <!-- Message displayed when signed in, sign-in button -->
+                        <div class="me-auto" id="userSignedInMessage"></div>
+                        <div>
+                            <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignOut">Sign out</button>
+                        </div>
+                    </div>   
+                </div>
+
+                <div class="card thumbnailGenCard d-flex">
+                    <!-- Tabs -->
+                    <div class="card-header">
+                        <ul class="nav nav-pills nav-justified card-header-pills" id="tabs" role="tablist">
+                        <!-- <ul class="nav nav-tabs nav-fill card-header-tabs"  id="thumbnail-gen-tabs" role="tablist"> -->
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="selectItemTab" data-bs-toggle="pill" data-bs-target="#selectItem" type="button" role="tab" aria-controls="selectItem" aria-selected="true">
+                                    1. Select item
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link disabled" id="itemDataTab" data-bs-toggle="pill" data-bs-target="#itemData" type="button" role="tab" aria-controls="itemData" aria-selected="true" aria-disabled="true">
+                                    2. Enter item data
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link disabled" id="makeThumbnailTab" data-bs-toggle="pill" data-bs-target="#makeThumbnail" type="button" role="tab" aria-controls="makeThumbnail" aria-selected="true" aria-disabled="true">
+                                    3. Make thumbnail
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tab content -->
+                    <div class="tab-content mt-auto mb-auto">
+                        <!-- 1. Select item -->
+                        <div class="card-body tab-pane fade show active" role="tabpanel" id="selectItem" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="card-title fs-5">Select your item</div>
+                            <p class="card-text">Choose your item from the CBI Maps portal, or skip this step and enter the item's data manually.</p>
+                            <div class="card-title fs-6">CBI Maps item search / item ID</div>
+                            <div class="input-group signedOutElements">
+                                <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="itemSearchInputSignedOut" aria-describedby="itemSearchButtonSignedOut" disabled>
+                                <button class="btn btn-outline-secondary" type="button" id="itemSearchButtonSignedOut" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="signedInElements d-none">
+                                <form id="itemSearch">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search or enter item ID..." aria-label="Item ID" id="itemSearchInput">
+                                        <button class="btn btn-outline-secondary" type="submit" id="itemSearchButton">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="mt-2" id="itemSearchResults">
+                                    <ul class="list-group searchResults overflow-auto" id="itemSearchResultsList"></ul>
+                                </div>
+                            </div>
+                            <div class="text-center my-3 fst-italic">or</div>
+                            <button type="button" class="btn btn-light w-100" id="skipItemSelection">
+                                Skip
+                            </button>
+                        </div>
+
+                        <!-- 2. Enter item data -->
+                        <div class="card-body tab-pane fade" role="tabpanel" id="itemData" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="card-title fs-5">Enter item data</div>
+                            <p class="card-text">Enter the item's data. If you selected an item from the portal, some of this information was autofilled for you.</p>
+                            <!-- Item type selection -->
+                            <div class="form-group mb-2">
+                                <label for="applicationType" class="form-label fw-bold">Item Type</label>
+                                <input class="form-control" list="applicationTypeDatalist" id="applicationTypeInput" placeholder="Click or type here to choose an item type">
+                                <datalist id="applicationTypeDatalist">
+                                    <option value="360 VR Experience">
+                                    <option value="3DTilesPackage">
+                                    <option value="3DTilesService">
+                                    <option value="Administrative Report">
+                                    <option value="Apache Parquet">
+                                    <option value="AppBuilder Extension">
+                                    <option value="AppBuilder Widget Package">
+                                    <option value="ArcGIS Pro Add In">
+                                    <option value="ArcGIS Pro Configuration">
+                                    <option value="ArcPad Package">
+                                    <option value="CAD Drawing">
+                                    <option value="CSV">
+                                    <option value="CSV Collection">
+                                    <option value="CityEngine Web Scene">
+                                    <option value="Code Attachment">
+                                    <option value="Code Sample">
+                                    <option value="Color Set">
+                                    <option value="Compact Tile Package">
+                                    <option value="Content Category Set">
+                                    <option value="Dashboard">
+                                    <option value="Data Pipeline">
+                                    <option value="Deep Learning Package">
+                                    <option value="Deep Learning Studio Project">
+                                    <option value="Desktop Add In">
+                                    <option value="Desktop Application">
+                                    <option value="Desktop Application Template">
+                                    <option value="Desktop Style">
+                                    <option value="Document Link">
+                                    <option value="Earth configuration">
+                                    <option value="Esri Classification Schema">
+                                    <option value="Esri Classifier Definition">
+                                    <option value="Excalibur Imagery Project">
+                                    <option value="Experience Builder Widget">
+                                    <option value="Experience Builder Widget Package">
+                                    <option value="Explorer Add In">
+                                    <option value="Explorer Layer">
+                                    <option value="Explorer Map">
+                                    <option value="Export Package">
+                                    <option value="Feature Collection">
+                                    <option value="Feature Collection Template">
+                                    <option value="Feature Service">
+                                    <option value="File Geodatabase">
+                                    <option value="Form">
+                                    <option value="GML">
+                                    <option value="GeoBIM Application">
+                                    <option value="GeoBIM Project">
+                                    <option value="GeoJson">
+                                    <option value="GeoPackage">
+                                    <option value="Geocoding Service">
+                                    <option value="Geodata Service">
+                                    <option value="Geometry Service">
+                                    <option value="Geoprocessing Package">
+                                    <option value="Geoprocessing Package (Pro version)">
+                                    <option value="Geoprocessing Sample">
+                                    <option value="Geoprocessing Service">
+                                    <option value="Globe Document">
+                                    <option value="Group Layer">
+                                    <option value="Hub Event">
+                                    <option value="Hub Initiative">
+                                    <option value="Hub Initiative Template">
+                                    <option value="Hub Page">
+                                    <option value="Hub Project">
+                                    <option value="Hub Site Application">
+                                    <option value="Image">
+                                    <option value="Image Collection">
+                                    <option value="Image Service">
+                                    <option value="Insights Data Engineering Model">
+                                    <option value="Insights Data Engineering Workbook">
+                                    <option value="Insights Model">
+                                    <option value="Insights Page">
+                                    <option value="Insights Theme">
+                                    <option value="Insights Workbook">
+                                    <option value="Insights Workbook Package">
+                                    <option value="Investigation">
+                                    <option value="KML">
+                                    <option value="KML Collection">
+                                    <option value="Knowledge Studio Project">
+                                    <option value="Layer">
+                                    <option value="Layer Package">
+                                    <option value="Layout">
+                                    <option value="Locator Package">
+                                    <option value="Map Area">
+                                    <option value="Map Document">
+                                    <option value="Map Package">
+                                    <option value="Map Service">
+                                    <option value="Map Template">
+                                    <option value="Media Layer">
+                                    <option value="Microsoft Excel">
+                                    <option value="Microsoft Powerpoint">
+                                    <option value="Microsoft Word">
+                                    <option value="Mission">
+                                    <option value="Mobile Application">
+                                    <option value="Mobile Basemap Package">
+                                    <option value="Mobile Map Package">
+                                    <option value="Mobile Scene Package">
+                                    <option value="Native Application">
+                                    <option value="Native Application Installer">
+                                    <option value="Network Analysis Service">
+                                    <option value="Notebook">
+                                    <option value="Notebook Code Snippet Library">
+                                    <option value="OGCFeatureServer">
+                                    <option value="Oriented Imagery Catalog">
+                                    <option value="Ortho Mapping Project">
+                                    <option value="Ortho Mapping Template">
+                                    <option value="PDF">
+                                    <option value="Pro Map">
+                                    <option value="Pro Presentation">
+                                    <option value="Pro Report">
+                                    <option value="Pro Report Template">
+                                    <option value="Project Package">
+                                    <option value="Project Template">
+                                    <option value="Published Map">
+                                    <option value="Raster function template">
+                                    <option value="Relational Database Connection">
+                                    <option value="Report Template">
+                                    <option value="Rule Package">
+                                    <option value="SQLite Geodatabase">
+                                    <option value="Scene Document">
+                                    <option value="Scene Package">
+                                    <option value="Scene Service">
+                                    <option value="Service Definition">
+                                    <option value="Shapefile">
+                                    <option value="Solution">
+                                    <option value="Statistical Data Collection">
+                                    <option value="StoryMap">
+                                    <option value="StoryMap Theme">
+                                    <option value="Style">
+                                    <option value="Survey123 Add In">
+                                    <option value="Symbol Set">
+                                    <option value="Task File">
+                                    <option value="Tile Package">
+                                    <option value="Urban Project">
+                                    <option value="Vector Tile Package">
+                                    <option value="Vector Tile Service">
+                                    <option value="Visio Document">
+                                    <option value="WCS">
+                                    <option value="WFS">
+                                    <option value="WMS">
+                                    <option value="WMTS">
+                                    <option value="Web AppBuilder Widget">
+                                    <option value="Web Experience">
+                                    <option value="Web Experience Template">
+                                    <option value="Web Map">
+                                    <option value="Web Mapping Application">
+                                    <option value="Web Scene">
+                                    <option value="Workflow Manager Package">
+                                    <option value="Workflow Manager Service">
+                                    <option value="Workforce Project">
+                                    <option value="iWork Keynote">
+                                    <option value="iWork Numbers">
+                                    <option value="iWork Pages">
+                                </datalist>
+                            </div>
+                            <!-- External source selection -->
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="external">
+                                <label class="form-check-label" for="external">
+                                    External Source (References service on an external server)
+                                </label>
+                            </div>
+                            <!-- Source logo selection -->
+                            <div class="form-group mb-2">
+                                <label for="sourceIcon" class="form-label fw-bold">Source Logo</label>
+                                <!-- Each option should have a value. Each value should be the file name
+                                    in the logos directory (no spaces in file name please)-->
+                                <select class="form-select" id="sourceIcon">
+                                    <option value="Other">Other (Upload Logo)</option>
+                                    <option value="None">None</option>
+                                </select>
+                            </div>
+                            <!-- Custom source icon file upload [hidden by default] -->
+                            <div class="form-group mb-2">
+                                <div id="customLogoBlock" style="display:none">
+                                    <label class="form-label" for="customlogo">Other Source Icon</label>
+                                    <input class='form-control' type="file" id="customlogo" name="customlogo" />
+                                </div>
+                                <output id="logoDetails" class="d-none"><img id="customlogofile" style="display:none" /></output>
+                            </div>
+                            <!-- Next step -->
+                            <button type="button" class="btn btn-primary w-100 mt-2" id="itemDataNextStep">
+                                Next step
+                            </button>
+                        </div>
+
+                        <!-- 3. Make thumbnail -->
+                        <div class="card-body tab-pane fade" role="tabpanel" id="makeThumbnail" aria-labelledby="pills-home-tab" tabindex="0">
+                            <div class="card-title fs-5">Make thumbnail</div>
+                            <p class="card-text">Customize your thumbnail and push it to your item on the portal, or just download it.</p>
+                            <!-- Screenshot file upload -->
+                            <div class="form-group mb-2">
+                                <!-- Radio button selector for ArcGIS Portal or an uploaded image -->
+                                <fieldset id="imageSourceControls">
+                                    <label for="file" class="form-label d-block fw-bold">Screenshot source</label>
+                                    <div class="d-inline-flex flex-fill w-100">
+                                        <div class="form-check flex-fill">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="imageSource" id="imageSourceArcgisThumbnail" value="arcgisPortalThumbnail">
+                                                Default item thumbnail
+                                            </label>
+                                        </div>
+                                        <div class="form-check flex-fill">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="imageSource" id="imageSourceClipboard" value="clipboardImage">
+                                                Clipboard
+                                            </label>
+                                        </div>
+                                        <div class="form-check flex-fill">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" name="imageSource" id="imageSourceFileUpload" value="fileUpload">
+                                                Image upload
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <!-- ArcGIS Portal default thumbnail upload option -->
+                                <div id="imageSourceOptionsContainer">
+                                    <div class="d-none" id="defaultThumbnailOptions">
+                                        <!-- Message displayed when signed out -->
+                                        <button type="button" class="btn btn-secondary w-100 mt-2 signedOutElements" disabled>
+                                            You are not signed in.
+                                        </button>
+                                        <button type="button" class="btn btn-secondary w-100 mt-2 signedInElements noSelection d-none" disabled>
+                                            You have not selected an item.
+                                        </button>
+                                        <button type="button" id="getItemThumbnail" class="btn btn-primary w-100 mt-2 requiresSelection d-none">
+                                            Get item thumbnail
+                                        </button>
+                                    </div>
+                                    <!-- Clipboard option -->
+                                    <div class="d-none" id="clipboardImageOptions">
+                                        <div class="alert alert-danger mt-2 mb-0 d-none" role="alert" id="pasteImageAlert">
+                                            Your clipboard doesn't have an image copied to it.
+                                        </div>
+                                        <button type="button" class="btn btn-primary w-100 mt-2" id="pasteImage">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                                            </svg>
+                                            Paste
+                                        </button>
+                                        <div class="form-text">
+                                            Press the button or use the <kbd>Ctrl</kbd> + <kbd>V</kbd> keyboard shortcut to use the image on your clipboard.
+                                        </div>
+                                    </div>
+                                    <!-- File upload option -->
+                                    <div class="d-none" id="userImageOptions">
+                                        <input class='form-control' type="file" id="file" name="file" />
+                                        <div class="form-text">
+                                            For best results, your screenshot should have an aspect ratio 1.5:1.<br />
+                                            Example sizes (<em>width</em> x <em>height</em>): 200x133, 450x300, 750x500, 1500x1000.<br />
+                                            <a href="https://support.microsoft.com/en-us/help/13776/windows-use-snipping-tool-to-capture-screenshots" 
+                                            target="_blank">Windows Snipping Tool</a> or 
+                                            <a href="https://getsharex.com/" target="_blank">ShareX</a> are good screenshot utilties.
+                                        </div>
+                                        <!-- Hidden image to store loaded thumbnail from user. Defaults to default screenshot png in root directory. -->
+                                        <output id="fileDetails"><img src = "Screenshot_default.png" id="thumb" style="display:none" /></output>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Controls for image positioning -->
+                            <fieldset id="imagePositionControls">
+                                <legend class="form-label fw-bold fs-6">Screenshot position</legend>
+                                <div class="d-inline-flex flex-fill w-100">
+                                    <div class="form-check flex-fill">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
+                                            Stretch image
+                                        </label>
+                                    </div>
+                                    <div class="form-check flex-fill">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="imagePosition" id="imageFill" value="imageFill">
+                                            Fill image
+                                        </label>
+                                    </div>
+                                    <div class="form-check flex-fill">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="radio" name="imagePosition" id="imageFit" value="imageCenter">
+                                            Center image
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <!-- Actions: download or upload thumbnail. Change the upload button displayed based on user account and permissions status -->
+                            <div class="d-flex flex-fill gap-3">
+                                <div class="w-50">
+                                    <button type="button" class="btn btn-primary w-100 mt-2" id="downloadThumbnail">
+                                        Download thumbnail
+                                    </button>
+                                </div>
+                                <div class="w-50 noSelection">
+                                    <button type="button" class="btn btn-secondary w-100 mt-2" disabled>
+                                        Upload thumbnail
+                                    </button>
+                                    <div class="form-text">
+                                        You will need to sign into CBI Maps and select an item to use this option.
+                                    </div>
+                                </div>
+                                <div class="w-50 requiresSelection requiresPrivileges d-none">
+                                    <button type="button" class="btn btn-primary w-100 mt-2" id="uploadThumbnail">
+                                        Upload thumbnail
+                                    </button>
+                                    <div class="form-text">
+                                        This button will set the item's thumbnail on CBI Maps.
+                                    </div>
+                                </div>
+                                <div class="w-50 requiresSelection noPrivileges d-none">
+                                    <button type="button" class="btn btn-secondary w-100 mt-2" disabled>
+                                        Upload thumbnail
+                                    </button>
+                                    <div class="form-text">
+                                        You don't have the privileges required to update this item's thumbnail.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected item -->
+                    <div class="mt-auto card-footer text-body-secondary d-flex justify-content-between d-none" id="selectedItemInfo">
+                        <div id="selectedItemInfoMsg"></div>
+                        <div>
+                            <button type="button" class="btn-close" aria-label="Close" id="selectedItemInfoRemove"></button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex flex-column align-items-xl-end gap-3 order-1 order-lg-2 mb-3">
-                <div class="canvas-height w-100 position-relative bg-secondary-subtle">
+            <div class="col-lg-8 col-xl-7 mx-xl-auto d-flex order-1 order-lg-2">
+                <div class="min-canvas-height w-100 position-relative bg-secondary-subtle rounded">
                     <canvas id="thumbnail" class="thumbnailCanvas position-absolute top-50 start-50 translate-middle" height="400px" width="600px">
                         <em>If you see this text, your browser does not support the HTML5 canvas tag
                         and this application will not work.</em>
                     </canvas>
                 </div>
-                <div class="w-100">
-                    <fieldset id="imagePositionControls">
-                        <legend>Screenshot position</legend>
-                        <div class="d-inline-flex flex-fill w-100">
-                            <div class="form-check flex-fill">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageStretch" value="imageStretch" checked>
-                                    Stretch image
-                                </label>
-                            </div>
-                            <div class="form-check flex-fill">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageFill" value="imageFill">
-                                    Fill image
-                                </label>
-                            </div>
-                            <div class="form-check flex-fill">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="radio" name="imagePosition" id="imageFit" value="imageCenter">
-                                    Center image
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <button type="button" class="btn btn-primary w-100" id="downloadThumbnail">
-                    Download Thumbnail
-                </button>
             </div>
         </div>
         <div class="row">
             <div class="col col-lg-12">
                 <hr>
-                <p>Developed by Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu</p>
-                
+                <p>
+                    Developed by <a href="mailto:richard.smith@tamucc.edu">Rick Smith</a> and <a href="mailto:rodrigo.davilacastillo@tamucc.edu">Rodrigo Davila Castillo</a>
+                    | <a href="https://conradblucherinstitute.org">Conrad Blucher Institute for Surveying and Science</a>
+                </p>
             </div>
         </div>
     <!-- End Container -->
     </div>
 
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!-- Modal (message box) that pops up when you set a thumbnail -->
+    <div class="modal fade" id="setThumbnailModal" tabindex="-1" aria-labelledby="setThumbnailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="setThumbnailModalLabel">Set thumbnail</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="setThumbnailModalBody"></div>
+                <div class="modal-footer" id="setThumbnailModalFooter"></div>
+            </div>
+        </div>
+    </div>
+<!-- Load jQuery -->
+<script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
+<!-- Load Bootstrap -->
 <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
-<!--Custom javascript for the thumbnail generator.-->
+<!-- Load logo list constant -->
+<script type="text/javascript" src="logos/logoList.js"></script>
+<!-- ArcGIS Calcite elements, core API -->
+<!-- Load Calcite -->
+<script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+<!-- Load the ArcGIS Maps SDK for JavaScript core API -->
+<link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css"/>
+<script src="https://js.arcgis.com/4.32/"></script>
+<!-- Custom javascript for the thumbnail generator.-->
 <script type="text/javascript" src="js/PortalThumbnailGenerator.js"></script>
+<!-- Portal access JS -->
+<script type="text/javascript" src="js/PortalAccess.js"></script>
 </body>
 </html>

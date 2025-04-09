@@ -1,10 +1,11 @@
-/*  Title: Portal Thumbnail Generator library
-    Purpose: Logic behind ArcGIS Portal Thumbnail Generator Tool. Takes select items and generates a thumbnail on the
-                HTML5 canvas.
-    Author: Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
-    Date: April 18, 2023
-    How to maintain: The canvas size of 600w x 400h is hard coded in to the logic. Any change of canvas size will
-        require recoding the values throughout. Going forward, this information could be pulled out into constants.
+/*  Title:              Portal Thumbnail Generator library
+    Purpose:            Logic behind ArcGIS Portal Thumbnail Generator Tool. Takes select items and generates a thumbnail on the
+                        HTML5 canvas. Updated to include image positioning options and to work with the revamped UI.
+    Authors:            Rick Smith - Conrad Blucher Institute for Surveying and Science - Richard.Smith@tamucc.edu
+                        Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
+    Date:               April 7, 2025
+    How to maintain:    The canvas size of 600w x 400h is hard coded in to the logic. Any change of canvas size will
+                        require recoding the values throughout. Going forward, this information could be pulled out into constants.
 */
 
 /*  Title: generateThumbnail
@@ -31,7 +32,6 @@ function generateThumbnail(){
     // Draw uploaded thumbnail (defaults to CBI logo)
     var thumbImg = new Image();
     thumbImg.src = $("#thumb").attr('src');
-	// ctx.drawImage(thumbImg, 0, 0, canvasWidth, canvasHeight);
     
     // Change position of image depending on what option is selected in the form. Defaults to stretching the image.
     // Fetch image position, set as imageStretch by default
@@ -127,10 +127,10 @@ function generateThumbnail(){
     ctx.font = '40px sans-serif';
     // Rotate canvas so text can be drawn vertical
     ctx.rotate(3 * Math.PI / 2);
-    if ($("#applicationType option:selected").attr('value') == 'other'){
-        var typeTitle = $("#customapplicationtype").val();
-    } else {
-        var typeTitle = $("#applicationType option:selected").text();
+    var typeTitle = $("#applicationTypeInput").val();
+    // Show placeholder
+    if ( !typeTitle ) {
+        typeTitle = "Item type";
     }
     // Check to see if we need to reduce font size. If overruns area (95px), then reduce font size by 1 and repeat.
     var fontSize = 46;
@@ -147,9 +147,16 @@ function generateThumbnail(){
     ctx.restore();
 
     // Add source icon (logo)
-    var logoImage = "logos/" + $("#sourceIcon option:selected").attr('value');
-    if (logoImage == "logos/Other.png") {
+    let logoImage;
+    const selectedLogo = $("#sourceIcon option:selected").attr('value');
+    if (selectedLogo === "Other") {
         logoImage = $("#customlogofile").attr('src');
+    }
+    else if (selectedLogo === "None") {
+        logoImage = null;
+    }
+    else {
+        logoImage = selectedLogo;
     }
 
     var newImage = new Image();
@@ -226,23 +233,102 @@ function handleOtherSourceIcon(evt) {
 */
 
 function toggleCustomSourceUpload(evt){
-    if ($("#sourceIcon option:selected").attr('value') == 'Other.png'){
+    if ($("#sourceIcon option:selected").attr('value') == 'Other'){
         document.getElementById('customLogoBlock').style.display="block";
     } else {
         document.getElementById('customLogoBlock').style.display="none";
     }
 }
 
-/*  Title: Toggle custom application type visibility
-    Purpose: Toggles the visibility of custom application type based on if they choose 'Other'
+/*  Title: Toggle image upload controls
+    Purposes: Handles the user's toggle of ArcGIS Portal, the clipboard, or an image file upload for their image source
 */
-
-function toggleCustomApplicationType(evt){
-    if ($("#applicationType option:selected").attr('value') == 'other'){
-        document.getElementById('customApplicationType').style.display="block";
-    } else {
-        document.getElementById('customApplicationType').style.display="none";
+function toggleImageUploadControls() {
+    const imageUploadSource = $("input[name=imageSource]:checked").val() ?? "fileUpload";
+    // Hide all currently shown options
+    $("#imageSourceOptionsContainer > div").addClass("d-none");
+    // Show only the options for the selected image source
+    switch ( imageUploadSource ) {
+        case "arcgisPortalThumbnail":
+            $("#defaultThumbnailOptions").removeClass("d-none");
+            break;
+        case "clipboardImage":
+            $("#clipboardImageOptions").removeClass("d-none");
+            break;
+        case "fileUpload":
+        default:
+            $("#userImageOptions").removeClass("d-none");
+            break;
     }
+}
+
+/*  Title: Set ImageBlob as thumbnail source
+    Purpose: Sets the image in the thumbnail to the given image blob.
+*/
+function setImageBlobAsThumbnailSrc(imageBlob) {
+    if (imageBlob) {
+        var URLObj = window.URL || window.webkitURL;
+        var img = new Image();
+        img.src = URLObj.createObjectURL(imageBlob);
+        $('#thumb').attr("src", img.src);
+    }
+}
+
+/**
+ * A handler that retrieves the images from the given ClipboardEvent as a blob, and returns it in a callback.
+ * It calls the callback function with an argument of undefined if the item(s) on the clipboard aren't images.
+ * @param {ClipboardEvent} pasteEvent The clipboard event sent by the browser on a user's paste action 
+ * @param {(blob: Blob) => {}} callback The callback function to call with the image blob as its argument
+ */
+function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback) {
+    // Check if a callback function is given
+    if ( typeof(callback) == "function" ) {
+        // If the clipboard is blank, call the callback function w/ undefined
+        if(pasteEvent.clipboardData == false){
+            callback(undefined);
+        };
+        // Get items on the clipboard
+        const items = pasteEvent.clipboardData.items;
+        // If the items are undefined, call callback w/ undefined
+        if(items == undefined){
+            callback(undefined);
+        };
+        
+        // Resolves as true if any item is an image, and false if none of them are.
+        let isAnItemImage = false;
+
+        // Go through items, call callback function and set bool as true if an item is an image
+        for (const item of items) {
+            if (item.type.indexOf("image") != -1) {
+                const blob = item.getAsFile();
+                callback( blob );
+                isAnItemImage = true;
+            }
+        }
+    
+        // If no item on the clipboard is an image, call the callback fn w/ undefined.
+        if ( !isAnItemImage ) {
+            callback( undefined );
+        }
+    
+    }
+    
+}
+
+/**
+ * A function that gets the existing source logos from the logos constant in logos/logoList.js selectable logo options,
+ * and adds them to the logo selection dropdown. It uses the first part of the logo image's filename for the label.
+ */
+function setSourceLogos() {
+    for (const logo of LOGO_FILES) {
+        // Split the logo at the final dot (i.e. the file extension), and use the first part as what's displayed.
+        $("#sourceIcon")
+            .append(`
+                <option value="logos/${logo}">${logo.substring(0, logo.lastIndexOf('.'))}</option>
+            `);
+    }
+    // Set default icon
+    $("#sourceIcon").val(`logos/${DEFAULT_LOGO}`).change();
 }
 
 /*  Title: document on ready event
@@ -256,14 +342,14 @@ $('document').ready(function(){
         alert('The File APIs are not fully supported in this browser. This tool will not work.');
     }
 
-    
+    // Get all of the source logos
+    setSourceLogos();
 
     // Do an initial creation of the thumbnail.
     generateThumbnail();
 
-    // If application type changes, generate thumbnail
-    $('#applicationType').on('change', function(){
-        toggleCustomApplicationType();
+    // If application type changes input, generate thumbnail
+    $('#applicationTypeInput').on('input', () => {
         generateThumbnail();
     });
 
@@ -294,6 +380,15 @@ $('document').ready(function(){
         generateThumbnail();
     });
 
+    // Clear image source option control
+    $("input[name=imageSource]:checked").prop("checked", false);
+
+    // If the image source option changes, change the options displayed and generate thumbnail
+    $('#imageSourceControls').on('change', () => {
+        toggleImageUploadControls();
+        generateThumbnail();
+    });
+
     // If Download Thumbnail button clicked, force file download
     $('#downloadThumbnail').on('click', function(){
         var canvas = document.getElementById('thumbnail');
@@ -314,43 +409,65 @@ $('document').ready(function(){
         generateThumbnail();
     });
 
-    // If an image is pasted on to the page, set it as the thumbnail source
-    window.addEventListener("paste", function(e){
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob){
-            if(imageBlob){
-                var URLObj = window.URL || window.webkitURL;
-                var img = new Image();
-                img.src=URLObj.createObjectURL(imageBlob);
-                document.getElementById('thumb').src=img.src;
-            }
-        }) 
+    // If an image is pasted on to the page with Ctrl + V, set it as the thumbnail source
+    window.addEventListener("paste", (e) => {
+        // Remove pasted image alert
+        $("#pasteImageAlert").addClass("d-none");
+        // Only trigger this if we're on the third step (Make Thumbnail)
+        if ( $('#tabs button[data-bs-target="#makeThumbnail"]').hasClass("active") ) {
+            // Select the clipboard option on the UI
+            $("#imageSourceClipboard").trigger('click');
+            // The event here is a ClipboardEvent, which is only triggered on an actual paste (Ctrl + V) -- so we can get the image directly from it.
+            retrieveImageFromClipboardEventAsBlob(e, (imageBlob) => {
+                if (imageBlob) {
+                    setImageBlobAsThumbnailSrc(imageBlob);
+                }
+                else {
+                    console.log("this is not an image!")
+                    $("#pasteImageAlert").removeClass("d-none");
+                }
+            } );
+        }
     }, false);
+
+    $('#pasteImage').on('click', async (e) => {
+        // The event here is a click event, so we'll have to get the image data with the Clipboard API. https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
+        // Note: the browser will prompt you for permission to paste here. Also, on non-localhost/127.0.0.1 connections, this will ONLY work over HTTPS.
+        
+        // Remove pasted image alert
+        $("#pasteImageAlert").addClass("d-none");
+        // Get clipboard contents
+        const clipboardContents = await navigator.clipboard.read();
+        for (const item of clipboardContents) {
+            // Run a test for every item in the array, check if it's an image format (i.e. if its MIME type begins with 'image')
+            const itemType = item.types?.[0] ?? undefined;
+
+            if ( itemType.substring(0, 5) === "image" ) {
+                const imageBlob = await item.getType( itemType );
+                setImageBlobAsThumbnailSrc( imageBlob );
+            }
+            else {
+                $("#pasteImageAlert").removeClass("d-none");
+            }
+        }
+    });
+
+    /* Step-by-step thumbnail generator events */
+    // React to "skip" button on step 1 by going straight to step 2
+    $('#skipItemSelection').on('click', () => {
+        // Remove disabled class after skipping
+        $('#itemDataTab').removeClass("disabled");
+        // Show the next tab!
+        const itemDataTab = bootstrap.Tab.getOrCreateInstance($('#tabs button[data-bs-target="#itemData"]'));
+        itemDataTab.show();
+    });
+
+    // Go from step 2 to step 3
+    $('#itemDataNextStep').on('click', () => {
+        // Remove disabled class for step 3
+        $('#makeThumbnailTab').removeClass("disabled");
+        // Show the next tab!
+        const makeThumbnailTab = bootstrap.Tab.getOrCreateInstance($('#tabs button[data-bs-target="#makeThumbnail"]'));
+        makeThumbnailTab.show();
+    });
 });
-
-//This handler retrieves the images from the clipboard as a blob and returns it in a callback.
-function retrieveImageFromClipboardAsBlob(pasteEvent, callback){
-	if(pasteEvent.clipboardData == false){
-        if(typeof(callback) == "function"){
-            callback(undefined);
-        }
-    };
-
-    var items = pasteEvent.clipboardData.items;
-
-    if(items == undefined){
-        if(typeof(callback) == "function"){
-            callback(undefined);
-        }
-    };
-
-    for (var i = 0; i < items.length; i++) {
-        // Skip content if not image
-        if (items[i].type.indexOf("image") == -1) continue;
-        // Retrieve image on clipboard as blob
-        var blob = items[i].getAsFile();
-
-        if(typeof(callback) == "function"){
-            callback(blob);
-        }
-    }
-}

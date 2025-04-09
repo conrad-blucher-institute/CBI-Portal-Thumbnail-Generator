@@ -316,7 +316,8 @@ function retrieveImageFromClipboardEventAsBlob(pasteEvent, callback) {
 }
 
 /**
- * A function that gets the existing source logos from the logos constant in logos/logoList.js selectable logo options
+ * A function that gets the existing source logos from the logos constant in logos/logoList.js selectable logo options,
+ * and adds them to the logo selection dropdown. It uses the first part of the logo image's filename for the label.
  */
 function setSourceLogos() {
     for (const logo of LOGO_FILES) {

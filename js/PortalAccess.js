@@ -257,7 +257,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 else {
                     $("#itemSearchResultsList")
                         .append(`
-                            <button type="button" href="#" class="list-group-item list-group-item-action">
+                            <button type="button" href="#" class="searchResult list-group-item list-group-item-action">
                                 <div class="fs-5">${itemResult.title}</div>
                                 <div class="fs-6">${itemResult.type}</div>
                             </button>

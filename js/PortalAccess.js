@@ -1,7 +1,7 @@
 /*  Title: Portal Thumbnail Generator Accesss library
     Purpose: Connect to the ArcGIS Portal and access/edit items on the Portal.
     Author: Rodrigo Davila Castillo - Conrad Blucher Institute for Surveying and Science - rodrigo.davilacastillo@tamucc.edu
-    Date: April 5, 2025
+    Date: April 7, 2025
     How to maintain:
         -   This sample's authentication flow is largely based off this ArcGIS Maps SDK sample code: https://developers.arcgis.com/javascript/latest/sample-code/identity-oauth-basic/.
             Read it to understand how it is used to prompt the user for sign-in, and how it calls back and gets a token at the end.

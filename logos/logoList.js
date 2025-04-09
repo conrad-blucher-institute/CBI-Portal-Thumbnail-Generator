@@ -20,7 +20,7 @@ const LOGO_FILES = [
     "CBI.png",
     "CDL.png",
     "GOAL.png",
-    "MANTIS.png",
+    "MANTIS.jpg",
     "TNRIS.png",
     "TSRC.png",
 ];

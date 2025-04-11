@@ -22,7 +22,7 @@ const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 // App ID
 const arcgisAppId = "AWimXkIUXWwB90tA";
 // App URL
-const appUrl = "https://cbimaps.tamucc.edu/thumbsup"
+const appUrl = "http://127.0.0.1:3000"
 // Credential object - initialize as undefined
 let arcgisUserCredential = undefined;
 // Selected item - initialize as undefined

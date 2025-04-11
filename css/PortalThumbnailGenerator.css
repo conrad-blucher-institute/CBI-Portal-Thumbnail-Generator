@@ -3,7 +3,7 @@
     height: 400px;
     width: 600px;
 }
-/* Instructions dropdown */
+/* Instructions accordion */
 /* - Change default accordion background & text color */
 .accordion-button, .accordion-button:not(.collapsed) {
     color: white;

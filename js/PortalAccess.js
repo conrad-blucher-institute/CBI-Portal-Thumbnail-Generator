@@ -349,6 +349,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
 
         // Get user's input
         const userInput = $("#itemSearchInput").val();
+        const sortField = $("input[name=sortField]:checked").val() ?? "title";
+        const sortOrder = $("input[name=sortOrder]:checked").val() ?? "asc";
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
         const itemById = undefined;
         // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.
@@ -364,7 +366,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 console.error(e);
             }
         }
-        const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson&token=${arcgisUserCredential.token}&q=${userInput}`;
+        const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson&token=${arcgisUserCredential.token}&sortField=${sortField}&sortOrder=${sortOrder}&q=${userInput}`;
         try {
             arcgisRequestJson = await esriRequest( searchUrl, {
                 responseType: "json"

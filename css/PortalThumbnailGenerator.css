@@ -51,6 +51,7 @@
 .searchResults {
     max-height: 12rem;
 }
+/* Width for sort controls popup */
 #searchSortControls {
     min-width: 20em;
 }

@@ -79,6 +79,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             $(".signedOutElements").addClass("d-none");
             // Display signed in elements
             $(".signedInElements").removeClass("d-none");
+            // Display admin elements if user is org_admin
+            const privilegesRequestUrl = `${arcgisPortalUrl}/sharing/rest/community/self?f=pjson&token=${arcgisUserCredential.token}`
+            const privilegesResponse = await esriRequest( privilegesRequestUrl );
+            if ( privilegesResponse?.["data"]?.["role"] === "org_admin" ) {
+                $(".adminElements").removeClass("d-none");
+            }
         }
         catch (e) {
             console.error(e);
@@ -161,12 +167,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Check if user has ability to edit item
         const privilegesRequestUrl = `${arcgisPortalUrl}/sharing/rest/community/self?f=pjson&token=${arcgisUserCredential.token}`
         const privilegesResponse = await esriRequest( privilegesRequestUrl );
-        // Determine if the user can edit this particular item -- Are they an admin? If not, are they the owner?
-        const itemEditableByUser = ( 
-            privilegesResponse?.["data"]?.["role"] === "org_admin"  ? true
-                                                                    : item.owner === privilegesResponse?.["data"]?.["username"] ? true
-                                                                                                                                : false
-        );
+        // Determine if the user can edit this particular item -- Are they the owner?
+        const itemEditableByUser = item.owner === arcgisUserCredential.userId ? true : false;
         // Display selected item info
         $("#selectedItemInfo").removeClass("d-none");
         $("#selectedItemInfoMsg")
@@ -181,21 +183,10 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         itemDataTab.show();
         // Autofill data, trigger input so the thumbnail changes
         $("#applicationTypeInput").val(item.type).trigger("input");
-        // Hide any elements that correspond to no item being selected
+        // Hide any elements that correspond to no item being selected;
+        // no check for privileges on item necessary since users can only search their own items
         $(".noSelection").addClass("d-none");
-        // Show elements that correspond to an item selection and the user's privileges on that item
-        if ( itemEditableByUser ) {
-            // Show elements that require an item selection, but exclude the ones that only show up when you don't have edit privileges
-            $(".requiresSelection")
-                .not($(".noPrivileges"))
-                    .removeClass("d-none");
-        }
-        else {
-            // Show elements that require an item selection, but exclude the ones that only show up when you DO have edit privileges
-            $(".requiresSelection")
-                .not($(".requiresPrivileges"))
-                    .removeClass("d-none");
-        }
+        $(".requiresSelection").removeClass("d-none");
     }
 
     /**
@@ -351,6 +342,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         const userInput = $("#itemSearchInput").val();
         const sortField = $("input[name=sortField]:checked").val() ?? "title";
         const sortOrder = $("input[name=sortOrder]:checked").val() ?? "asc";
+        const limitToUserItems = $("#searchFilterUserContentButton").hasClass("active") ? true : false;
         const argcisItemIdRegex = new RegExp("^[a-z0-9]{32}$");
         const itemById = undefined;
         // If the input matches regex (32-characters, 0-9 and a-z), try and see if it's an ID.
@@ -366,10 +358,19 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 console.error(e);
             }
         }
-        const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson&token=${arcgisUserCredential.token}&sortField=${sortField}&sortOrder=${sortOrder}&q=${userInput}`;
+        const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson${limitToUserItems ? `&filter=owner:${arcgisUserCredential.userId}` : ""}&token=${arcgisUserCredential.token}&sortField=${sortField}&sortOrder=${sortOrder}&q=${userInput}`;
+        console.log(searchUrl);
         try {
-            arcgisRequestJson = await esriRequest( searchUrl, {
-                responseType: "json"
+            arcgisRequestJson = await esriRequest( `${arcgisPortalUrl}/sharing/rest/search`, {
+                responseType: "json",
+                query: {
+                    "f": "pjson",
+                    "filter": limitToUserItems ? `owner:${arcgisUserCredential.userId}` : "",
+                    "token": arcgisUserCredential.token,
+                    "sortField": sortField,
+                    "sortOrder": sortOrder,
+                    "q": userInput,
+                }
             });
             displaySearchResults(arcgisRequestJson?.data?.results);
         }

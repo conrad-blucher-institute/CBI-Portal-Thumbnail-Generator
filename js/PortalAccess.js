@@ -333,7 +333,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
         // Suppress default behavior (reloading page)
         event.preventDefault();
 
-        // Get user's input
+        // Get user's input and options (search terms, sorting options, filter to user items)
         const userInput = $("#itemSearchInput").val();
         const sortField = $("input[name=sortField]:checked").val() ?? "title";
         const sortOrder = $("input[name=sortOrder]:checked").val() ?? "asc";

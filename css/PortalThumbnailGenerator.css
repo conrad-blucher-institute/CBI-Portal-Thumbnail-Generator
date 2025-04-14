@@ -51,3 +51,6 @@
 .searchResults {
     max-height: 12rem;
 }
+#searchSortControls {
+    min-width: 20em;
+}

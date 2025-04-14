@@ -3,6 +3,29 @@
     height: 400px;
     width: 600px;
 }
+/* Instructions accordion */
+/* - Change default accordion background & text color */
+.accordion-button, .accordion-button:not(.collapsed) {
+    color: white;
+    background-color: #214097;
+    border: 0px;
+}
+/* - Change default accordion border radius when collapsed */
+.accordion-button.collapsed {
+    border-bottom-right-radius: var(--bs-border-radius-lg) !important;
+    border-bottom-left-radius: var(--bs-border-radius-lg) !important;
+}
+/* - Change accordion arrow color */
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+}
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+}
+/* - Change instruction info icon */
+.instructionsIcon {
+    margin-top: 0.15em;
+}
 /* Fixed size for the output image */
 .canvas-width {
     width: 600px;
@@ -19,7 +42,6 @@
     width: 1em;
     height: 1em;
     display: inline-block;
-    margin-top: -.25em;
 }
 /* The card itself */
 .thumbnailGenCard {
@@ -28,4 +50,8 @@
 /* Max height for search results */
 .searchResults {
     max-height: 12rem;
+}
+/* Width for sort controls popup */
+#searchSortControls {
+    min-width: 20em;
 }

@@ -22,7 +22,7 @@ const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 // App ID
 const arcgisAppId = "AWimXkIUXWwB90tA";
 // App URL
-const appUrl = "http://127.0.0.1:3000"
+const appUrl = "http://cbimaps.tamucc.edu/thumbsup"
 // Credential object - initialize as undefined
 let arcgisUserCredential = undefined;
 // Selected item - initialize as undefined
@@ -358,7 +358,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 console.error(e);
             }
         }
-        const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson${limitToUserItems ? `&filter=owner:${arcgisUserCredential.userId}` : ""}&token=${arcgisUserCredential.token}&sortField=${sortField}&sortOrder=${sortOrder}&q=${userInput}`;
         try {
             arcgisRequestJson = await esriRequest( `${arcgisPortalUrl}/sharing/rest/search`, {
                 responseType: "json",

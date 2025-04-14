@@ -51,7 +51,3 @@
 .searchResults {
     max-height: 12rem;
 }
-/* Change margin on item search form */
-#itemSearch {
-    margin-top: -1em;
-}

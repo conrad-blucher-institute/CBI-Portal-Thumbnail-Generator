@@ -162,13 +162,8 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
      * @param {object} selectedItem The ArcGIS Portal item object corresponding to the user's selection
      */
     async function selectItem(selectedItem) {
-        // Set wider item variable to selectedItem
+        // Set item variable to selectedItem
         item = selectedItem;
-        // Check if user has ability to edit item
-        const privilegesRequestUrl = `${arcgisPortalUrl}/sharing/rest/community/self?f=pjson&token=${arcgisUserCredential.token}`
-        const privilegesResponse = await esriRequest( privilegesRequestUrl );
-        // Determine if the user can edit this particular item -- Are they the owner?
-        const itemEditableByUser = item.owner === arcgisUserCredential.userId ? true : false;
         // Display selected item info
         $("#selectedItemInfo").removeClass("d-none");
         $("#selectedItemInfoMsg")

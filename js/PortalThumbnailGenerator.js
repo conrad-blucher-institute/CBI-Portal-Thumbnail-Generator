@@ -342,10 +342,6 @@ $('document').ready(function(){
         alert('The File APIs are not fully supported in this browser. This tool will not work.');
     }
 
-    // Initialize Bootstrap tooltips
-    const tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-
     // Get all of the source logos
     setSourceLogos();
 

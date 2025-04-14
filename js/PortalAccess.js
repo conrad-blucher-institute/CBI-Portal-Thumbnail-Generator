@@ -359,7 +359,6 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             }
         }
         const searchUrl = `${arcgisPortalUrl}/sharing/rest/search?f=pjson${limitToUserItems ? `&filter=owner:${arcgisUserCredential.userId}` : ""}&token=${arcgisUserCredential.token}&sortField=${sortField}&sortOrder=${sortOrder}&q=${userInput}`;
-        console.log(searchUrl);
         try {
             arcgisRequestJson = await esriRequest( `${arcgisPortalUrl}/sharing/rest/search`, {
                 responseType: "json",

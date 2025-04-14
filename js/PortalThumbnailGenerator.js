@@ -427,7 +427,6 @@ $('document').ready(function(){
                     setImageBlobAsThumbnailSrc(imageBlob);
                 }
                 else {
-                    console.log("this is not an image!")
                     $("#pasteImageAlert").removeClass("d-none");
                 }
             } );

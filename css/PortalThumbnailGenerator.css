@@ -1,3 +1,22 @@
+/* Port-specific brand colors */
+:root {
+    --port-blue: rgb(0,78,152);
+    --port-light-blue: rgb(0,163,201);
+}
+.bg-primary, .nav-link.active {
+    background-color: var(--port-light-blue)!important;
+}
+.btn-primary, .form-check-input:checked {
+    background-color: var(--port-light-blue)!important;
+    border-color: var(--port-light-blue)!important;
+}
+a {
+    color: var(--port-light-blue)!important;
+}
+.nav-link:not(.active, .disabled) {
+    color: var(--port-blue)!important;
+}
+
 .thumbnailCanvas {
     border: 2px solid black;
     height: 400px;
@@ -7,7 +26,7 @@
 /* - Change default accordion background & text color */
 .accordion-button, .accordion-button:not(.collapsed) {
     color: white;
-    background-color: #214097;
+    background-color: var(--port-blue);
     border: 0px;
 }
 /* - Change default accordion border radius when collapsed */

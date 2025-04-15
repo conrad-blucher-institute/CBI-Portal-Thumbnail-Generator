@@ -47,11 +47,25 @@
 .thumbnailGenCard {
     min-height: 500px;
 }
-/* Max height for search results */
+/* Max height, resizability for search results */
 .searchResults {
-    max-height: 12rem;
+    height: 12rem;
+    resize: vertical;
 }
 /* Width for sort controls popup */
 #searchSortControls {
     min-width: 20em;
+}
+/* Width utility classes for search results */
+.w-70 {
+    width: 70%;
+}
+.w-60 {
+    width: 60%;
+}
+.w-40 {
+    width: 40%;
+}
+.w-30 {
+    width: 30%;
 }

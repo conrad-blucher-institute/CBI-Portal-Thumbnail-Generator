@@ -356,7 +356,10 @@ Required javascript libraries:
                                     </div>
                                 </form>
                                 <div class="mt-2" id="itemSearchResults">
-                                    <ul class="list-group searchResults overflow-auto" id="itemSearchResultsList"></ul>
+                                    <div class="alert alert-danger d-none" id="itemSearchNoResults" role="alert">
+                                        No results found.
+                                    </div>
+                                    <ul class="list-group searchResults overflow-auto d-none" id="itemSearchResultsList"></ul>
                                 </div>
                             </div>
                             <div class="text-center my-3 fst-italic">or</div>

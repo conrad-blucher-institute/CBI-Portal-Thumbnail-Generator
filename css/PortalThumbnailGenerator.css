@@ -56,3 +56,16 @@
 #searchSortControls {
     min-width: 20em;
 }
+/* Width utility classes for search results */
+.w-70 {
+    width: 70%;
+}
+.w-60 {
+    width: 60%;
+}
+.w-40 {
+    width: 40%;
+}
+.w-30 {
+    width: 30%;
+}

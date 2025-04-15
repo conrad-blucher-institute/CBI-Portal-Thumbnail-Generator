@@ -227,7 +227,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 if ( itemResult.thumbnail ) {
                     $("#itemSearchResultsList")
                     .append(`
-                        <button type="button" class="searchResult list-group-item list-group-item-action" value="${itemResult.id}">
+                        <div class="searchResult list-group-item list-group-item-action">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="w-25 d-flex align-items-center">
                                     <img
@@ -235,21 +235,55 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                                         src="${arcgisPortalUrl}/sharing/rest/content/items/${itemResult.id}/info/${itemResult.thumbnail}?token=${arcgisUserCredential.token}"
                                     >
                                 </div>
-                                <div class="w-75">
-                                    <div class="fs-5">${itemResult.title}</div>
-                                    <div class="fs-6">${itemResult.type}</div>
+                                <div class="w-75 d-flex justify-content-between">
+                                    <div class="w-60">
+                                        <div class="fs-5">${itemResult.title}</div>
+                                        <div class="fs-6">${itemResult.type}</div>
+                                    </div>
+                                    <div class="d-flex w-40 justify-content-end align-items-center gap-1">
+                                        <a class="btn btn-sm btn-light" target="_blank" href="${arcgisPortalUrl}/home/item.html?id=${itemResult.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                                            </svg>
+                                        </a>
+                                        <a class="btn btn-sm btn-primary searchResultSelect" href="#" data-id="${itemResult.id}">
+                                            Select
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </button>
+                        </div>
                     `);
                 }
                 else {
                     $("#itemSearchResultsList")
                         .append(`
-                            <button type="button" href="#" class="searchResult list-group-item list-group-item-action" value="${itemResult.id}">
-                                <div class="fs-5">${itemResult.title}</div>
-                                <div class="fs-6">${itemResult.type}</div>
-                            </button>
+                            <div href="#" class="searchResult list-group-item list-group-item-action">
+                                <div class="w-100 d-flex justify-content-between">
+                                    <div class="w-70">
+                                        <div class="fs-5">${itemResult.title}</div>
+                                        <div class="fs-6">${itemResult.type}</div>
+                                    </div>
+                                    <div class="d-flex w-30 justify-content-end align-items-center gap-1">
+                                        <a class="btn btn-sm btn-light" target="_blank" href="${arcgisPortalUrl}/home/item.html?id=${itemResult.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                                            </svg>
+                                        </a>
+                                        <a class="btn btn-sm btn-primary searchResultSelect d-inline-block" href="#" data-id="${itemResult.id}">
+                                            Select
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                                                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         `);
                 }
             }
@@ -259,12 +293,12 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
             $("#itemSearchNoResults").removeClass("d-none");
         }
         // Create an event listener for clicks on search results
-        $(".searchResult").on("click", async (event) => {
+        $(".searchResultSelect").on("click", async (event) => {
             // Prevent other parent/child elements from getting the "click" event
             event.stopPropagation();
             event.stopImmediatePropagation();
             // Get the item object from the passed ID
-            const itemById = await getItemById(event.currentTarget.value);
+            const itemById = await getItemById(event.currentTarget.dataset.id);
             // Select the item
             await selectItem(itemById);
         });

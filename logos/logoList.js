@@ -15,17 +15,12 @@
  * it's much trickier to just fetch the list of logo files from the logos folder.
  */
 const LOGO_FILES = [
-    "AI2ES.png",
-    "CATS.png",
-    "CBI.png",
-    "CDL.png",
-    "GOAL.png",
-    "MANTIS.jpg",
+    "Conrad Blucher Institute.png",
+    "Port Corpus Christi.png",
     "TNRIS.png",
-    "TSRC.png",
 ];
 
 /**
  * A constant string with the filename of the default logo to show on screen. This logo should be included in LOGO_FILES.
  */
-const DEFAULT_LOGO = "CBI.png";
+const DEFAULT_LOGO = "Port Corpus Christi.png";

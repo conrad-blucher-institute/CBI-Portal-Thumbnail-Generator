@@ -29,7 +29,7 @@ function generateThumbnail(){
     // Clear canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    // Draw uploaded thumbnail (defaults to CBI logo)
+    // Draw uploaded thumbnail (defaults to PCC logo)
     var thumbImg = new Image();
     thumbImg.src = $("#thumb").attr('src');
     
@@ -115,7 +115,7 @@ function generateThumbnail(){
     // If external checkbox is checked, draw external tag
     if($("#external").prop('checked')) {
         // Draw 'External' text
-        ctx.fillStyle = 'rgb(28,146,209)'; //Izzy Blue
+        ctx.fillStyle = 'rgb(0,163,201)'; // Port Light Blue
         ctx.font = '36px sans-serif';
         // Draw 'External' text right-justified with 5px padding on right and vertically centered
         ctx.fillText("External", canvasWidth - ctx.measureText("External").width - 5,
@@ -123,7 +123,7 @@ function generateThumbnail(){
     }
 
     // Draw type text
-    ctx.fillStyle = 'rgb(0,127,62)'; //Islander Green
+    ctx.fillStyle = 'rgb(0,78,152)'; // Port Blue
     ctx.font = '40px sans-serif';
     // Rotate canvas so text can be drawn vertical
     ctx.rotate(3 * Math.PI / 2);

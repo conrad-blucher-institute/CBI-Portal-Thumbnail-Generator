@@ -22,7 +22,7 @@ const arcgisPortalUrl = "https://cbimaps.tamucc.edu/portal"
 // App ID
 const arcgisAppId = "AWimXkIUXWwB90tA";
 // App URL
-const appUrl = "https://cbimaps.tamucc.edu/thumbsup"
+const appUrl = "http://127.0.0.1:3000"
 // Credential object - initialize as undefined
 let arcgisUserCredential = undefined;
 // Selected item - initialize as undefined
@@ -214,6 +214,9 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
      * @param {Array} itemResults 
      */
     function displaySearchResults(itemResults) {
+        // Hide no results dialog, existing item results
+        $("#itemSearchNoResults").addClass("d-none");
+        $("#itemSearchResultsList").addClass("d-none");
         // Clear current results container
         $("#itemSearchResultsList").html("");
         // Only display a list if it's a list and if it has a length value over 0.
@@ -250,14 +253,10 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                         `);
                 }
             }
+            $("#itemSearchResultsList").removeClass("d-none");
         }
         else {
-            $("#itemSearchResultsList")
-                .html(`
-                    <div class="alert alert-danger" role="alert">
-                        No results found.
-                    </div>
-                `);
+            $("#itemSearchNoResults").removeClass("d-none");
         }
         // Create an event listener for clicks on search results
         $(".searchResult").on("click", async (event) => {

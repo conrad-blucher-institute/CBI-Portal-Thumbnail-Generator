@@ -9,6 +9,7 @@
 .btn-primary, .form-check-input:checked {
     background-color: var(--port-light-blue)!important;
     border-color: var(--port-light-blue)!important;
+    color: white!important;
 }
 a {
     color: var(--port-light-blue)!important;

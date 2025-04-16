@@ -247,7 +247,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
                                             </svg>
                                         </a>
-                                        <a class="btn btn-sm btn-primary searchResultSelect" href="#" data-id="${itemResult.id}">
+                                        <a class="btn btn-sm btn-primary searchResultSelect" data-id="${itemResult.id}">
                                             Select
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
                                                 <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -262,7 +262,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                 else {
                     $("#itemSearchResultsList")
                         .append(`
-                            <div href="#" class="searchResult list-group-item list-group-item-action">
+                            <div class="searchResult list-group-item list-group-item-action">
                                 <div class="w-100 d-flex justify-content-between">
                                     <div class="w-70">
                                         <div class="fs-5">${itemResult.title}</div>
@@ -275,7 +275,7 @@ require(["esri/identity/OAuthInfo", "esri/identity/IdentityManager", "esri/porta
                                                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
                                             </svg>
                                         </a>
-                                        <a class="btn btn-sm btn-primary searchResultSelect d-inline-block" href="#" data-id="${itemResult.id}">
+                                        <a class="btn btn-sm btn-primary searchResultSelect d-inline-block" data-id="${itemResult.id}">
                                             Select
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
                                                 <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>

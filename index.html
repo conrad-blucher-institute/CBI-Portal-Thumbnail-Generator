@@ -19,11 +19,12 @@ Required javascript libraries:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>GeoPORT Portal Thumbnail Generator</title>
-	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-	<link rel="manifest" href="favicons/site.webmanifest">
+    <title>GeoPORT Thumbnail Generator</title>
+    <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicons/site.webmanifest" />
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
     <link href="css/PortalThumbnailGenerator.css" rel="stylesheet" type="text/css"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
@@ -32,7 +33,7 @@ Required javascript libraries:
     <div class="container">
         <div class="row py-4">
             <div class="p-5 text-center bg-primary text-white rounded-top-3">
-                <h1>GeoPORT Portal Thumbnail Generator</h1>
+                <h1>GeoPORT Thumbnail Generator</h1>
                 <p>Never use a default thumbnail again!</p>
             </div>
             <div class="accordion px-0" id="instructionsAccordion">
@@ -63,7 +64,7 @@ Required javascript libraries:
                                             <span class="fs-5 fw-bold">Sign in</span>
                                         </div>
                                         <div>
-                                            Sign into GeoPort if you want to get an item's data and set its thumbnail.
+                                            Sign into GeoPORT if you want to get an item's data and set its thumbnail.
                                         </div>
                                     </div>
                                     <div class="col-6 col-md d-flex flex-column gap-2">
@@ -78,7 +79,7 @@ Required javascript libraries:
                                             <span class="fs-5 fw-bold">Choose an item</span>
                                         </div>
                                         <div>
-                                            Choose an item from GeoPort, or skip this step if you just want a thumbnail image.
+                                            Choose an item from GeoPORT, or skip this step if you just want a thumbnail image.
                                         </div>
                                     </div>
                                     <div class="col-6 col-md d-flex flex-column gap-2">
@@ -126,7 +127,7 @@ Required javascript libraries:
                                             <span class="fs-5 fw-bold">Download or upload!</span>
                                         </div>
                                         <div>
-                                            Download your thumbnail, or upload it directly to GeoPort!
+                                            Download your thumbnail, or upload it directly to GeoPORT!
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +143,7 @@ Required javascript libraries:
                     <div class="d-flex align-items-center signedOutElements">
                         <!-- Message displayed when signed in, sign-in button -->
                         <div class="me-auto" id="userSignedOutMessage">
-                            You are not signed into GeoPort.
+                            You are not signed into GeoPORT.
                         </div>
                         <div>
                             <button type="button" class="btn btn-primary btn-sm text-nowrap ms-3" id="arcgisPortalSignIn">Sign in</button>
@@ -184,7 +185,7 @@ Required javascript libraries:
                         <!-- 1. Select item -->
                         <div class="card-body tab-pane fade show active" role="tabpanel" id="selectItem" aria-labelledby="pills-home-tab" tabindex="0">
                             <div class="card-title fs-5">Select your item</div>
-                            <p class="card-text">Choose your item from the GeoPort portal, or skip this step and enter the item's data manually.</p>
+                            <p class="card-text">Choose your item from GeoPORT, or skip this step and enter the item's data manually.</p>
                             <div class="input-group signedOutElements mt-3">
                                 <input type="text" class="form-control" placeholder="Sign in to search for items" aria-label="Item ID" id="itemSearchInputSignedOut" aria-describedby="itemSearchButtonSignedOut" disabled>
                                 <button class="btn btn-outline-secondary" type="button" id="itemSearchButtonSignedOut" disabled>
@@ -672,7 +673,7 @@ Required javascript libraries:
                                         Upload thumbnail
                                     </button>
                                     <div class="form-text">
-                                        You will need to sign into GeoPort and select an item to use this option.
+                                        You will need to sign into GeoPORT and select an item to use this option.
                                     </div>
                                 </div>
                                 <div class="w-50 requiresSelection d-none">
@@ -680,7 +681,7 @@ Required javascript libraries:
                                         Upload thumbnail
                                     </button>
                                     <div class="form-text">
-                                        This button will set the item's thumbnail on GeoPort.
+                                        This button will set the item's thumbnail on GeoPORT.
                                     </div>
                                 </div>
                             </div>

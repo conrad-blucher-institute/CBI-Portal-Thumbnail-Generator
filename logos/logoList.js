@@ -21,8 +21,8 @@ const LOGO_FILES = [
     "CDL.png",
     "GOAL.png",
     "MANTIS.jpg",
-    "TNRIS.png",
     "TSRC.png",
+    "TxGIO.png",
 ];
 
 /**

@@ -1,5 +1,6 @@
 # CBI Portal Thumbnail Generator
 An extremely simple self-contained thumbnail generator for ArcGIS Enterprise portal items, intended for displaying items from multiple source agencies in a standardized way. This application was designed for internal use at the [Conrad Blucher Institute](https://conradblucherinstitute.org). However, information on its deployment has been provided for the public's benefit.
+![A step-by-step demonstration of the thumbnail creation process of the Portal Thumbnail Generator.](https://github.com/user-attachments/assets/b477ffd6-594a-43fc-b109-7a7fc8ce9eec)
 
 # Deploy
 ## Get your app ID

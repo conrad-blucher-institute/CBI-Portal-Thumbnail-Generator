@@ -9,6 +9,7 @@ First things first, you'll want to create an app ID for this application. To do 
   - If you're testing this on a local environment, you can use a localhost address and port here (such as `https://127.0.0.1:3000/oauth-callback.html`. Make sure to use a different URL in production, of course.
 - Application environment: Browser. This application is designed for the web.
 - URL: enter the URL this application will be hosted on. A placeholder here is fine
+
 Finally, enter the details that will show up for this application's item page on your organization's ArcGIS portal, and press Save.
 
 You've now created the application that will be used to access Portal items from the thumbnail generator. You will use the Client ID found on the application's item page in the next step.
